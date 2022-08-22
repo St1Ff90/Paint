@@ -39,11 +39,12 @@ namespace Paint
             InitializeComponent();
             pbMain.Image = new Bitmap(pbMain.Width, pbMain.Height);
             _temp = (Bitmap)pbMain.Image.Clone();
+            GetPen();
         }
         #region Private Methods
         private void GetPen()
         {
-            pen = new Pen(Color.Red, 3);
+            pen = new Pen(Color.Black, 3);
             pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
         }
@@ -193,13 +194,13 @@ namespace Paint
                 using (var bitmap = new Bitmap(pbMain.Width, pbMain.Height))
                 using (var graphics = Graphics.FromImage(bitmap))
                 {
-                    GetPen();
                     foreach (var bs in _currentHistory)
                     {
                         IPaintable paintable = _loadedTools.Where(paintable => paintable.ToolTitle == bs.Title).FirstOrDefault();
 
                         if (paintable != null)
                         {
+                            pen = new Pen(bs.Color, bs.Width);
                             bs.Draw = paintable.Draw;
                             bs.AddPoint = paintable.AddPoint;
                             bs.DisposeItem = paintable.ClearObj;
@@ -252,6 +253,8 @@ namespace Paint
         {
             if (_obj == null) return;
             _isClicked = true;
+            _obj.Color = pen.Color;
+            _obj.Width = (int)pen.Width;
             _obj.AddPoint(e.X, e.Y);
             _obj.Start = e.Location;
             _redoList = new List<UniObj>();
@@ -265,7 +268,6 @@ namespace Paint
                 using (var bitmap = new Bitmap(_temp, pbMain.Width, pbMain.Height))
                 using (var graphics = Graphics.FromImage(bitmap))
                 {
-                    GetPen();
                     //Draw?.Invoke(graphics, pen, e.Location.X, e.Location.Y);
                     _obj.Draw(graphics, pen, e.Location.X, e.Location.Y);
                     pbMain.Image?.Dispose();
@@ -330,9 +332,9 @@ namespace Paint
             using (var bitmap = new Bitmap(pbMain.Width, pbMain.Height))
             using (var graphics = Graphics.FromImage(bitmap))
             {
-                GetPen();
                 for (int i = 0; i < _currentHistory.Count; i++)
                 {
+                    pen = new Pen(_currentHistory[i].Color, _currentHistory[i].Width);
                     _currentHistory[i].AddPoint(_currentHistory[i].Start.X, _currentHistory[i].Start.Y);
                     _currentHistory[i].Draw(graphics, pen, _currentHistory[i].End.X, _currentHistory[i].End.Y);
                 }
@@ -394,6 +396,75 @@ namespace Paint
             tssb.ShowDropDown();
         }
 
+        private void bntYellow_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntRed_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntBlue_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntGreen_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntBlack_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntGray_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntSilver_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntWhite_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntTan_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntMoccassin_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntLime_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+
+        private void bntThistle_Click(object sender, EventArgs e)
+        {
+            pen.Color = ((Button)sender).BackColor;
+        }
+        private void tbWidth_Scroll(object sender, EventArgs e)
+        {
+            int width = ((TrackBar)sender).Value;
+            lblWidth.Text = "Товшина " + width + " px";
+            pen.Width = width;
+        }
         #endregion
+
+
+
+
     }
 }

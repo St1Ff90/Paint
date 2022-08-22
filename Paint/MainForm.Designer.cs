@@ -31,6 +31,21 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pbMain = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.tbWidth = new System.Windows.Forms.TrackBar();
+            this.lblWidth = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.bntThistle = new System.Windows.Forms.Button();
+            this.bntLime = new System.Windows.Forms.Button();
+            this.bntMoccassin = new System.Windows.Forms.Button();
+            this.bntTan = new System.Windows.Forms.Button();
+            this.bntSilver = new System.Windows.Forms.Button();
+            this.bntGray = new System.Windows.Forms.Button();
+            this.bntBlack = new System.Windows.Forms.Button();
+            this.bntWhite = new System.Windows.Forms.Button();
+            this.bntGreen = new System.Windows.Forms.Button();
+            this.bntBlue = new System.Windows.Forms.Button();
+            this.bntRed = new System.Windows.Forms.Button();
+            this.bntYellow = new System.Windows.Forms.Button();
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.tssb = new System.Windows.Forms.ToolStripSplitButton();
             this.створитиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,6 +63,9 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbWidth)).BeginInit();
+            this.panel2.SuspendLayout();
             this.tsMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,7 +75,7 @@
             this.pbMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbMain.Location = new System.Drawing.Point(0, 25);
             this.pbMain.Name = "pbMain";
-            this.pbMain.Size = new System.Drawing.Size(598, 425);
+            this.pbMain.Size = new System.Drawing.Size(627, 425);
             this.pbMain.TabIndex = 0;
             this.pbMain.TabStop = false;
             this.pbMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
@@ -66,11 +84,175 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.tbWidth);
+            this.panel1.Controls.Add(this.lblWidth);
+            this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(598, 25);
+            this.panel1.Location = new System.Drawing.Point(627, 25);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(202, 425);
+            this.panel1.Size = new System.Drawing.Size(173, 425);
             this.panel1.TabIndex = 1;
+            // 
+            // tbWidth
+            // 
+            this.tbWidth.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbWidth.Location = new System.Drawing.Point(0, 143);
+            this.tbWidth.Minimum = 1;
+            this.tbWidth.Name = "tbWidth";
+            this.tbWidth.Size = new System.Drawing.Size(173, 45);
+            this.tbWidth.TabIndex = 0;
+            this.tbWidth.Value = 1;
+            this.tbWidth.Scroll += new System.EventHandler(this.tbWidth_Scroll);
+            // 
+            // lblWidth
+            // 
+            this.lblWidth.AutoSize = true;
+            this.lblWidth.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblWidth.Location = new System.Drawing.Point(0, 128);
+            this.lblWidth.Name = "lblWidth";
+            this.lblWidth.Size = new System.Drawing.Size(57, 15);
+            this.lblWidth.TabIndex = 2;
+            this.lblWidth.Text = "Товшина";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.bntThistle);
+            this.panel2.Controls.Add(this.bntLime);
+            this.panel2.Controls.Add(this.bntMoccassin);
+            this.panel2.Controls.Add(this.bntTan);
+            this.panel2.Controls.Add(this.bntSilver);
+            this.panel2.Controls.Add(this.bntGray);
+            this.panel2.Controls.Add(this.bntBlack);
+            this.panel2.Controls.Add(this.bntWhite);
+            this.panel2.Controls.Add(this.bntGreen);
+            this.panel2.Controls.Add(this.bntBlue);
+            this.panel2.Controls.Add(this.bntRed);
+            this.panel2.Controls.Add(this.bntYellow);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(173, 128);
+            this.panel2.TabIndex = 1;
+            // 
+            // bntThistle
+            // 
+            this.bntThistle.BackColor = System.Drawing.Color.Thistle;
+            this.bntThistle.Location = new System.Drawing.Point(129, 81);
+            this.bntThistle.Name = "bntThistle";
+            this.bntThistle.Size = new System.Drawing.Size(35, 33);
+            this.bntThistle.TabIndex = 11;
+            this.bntThistle.UseVisualStyleBackColor = false;
+            this.bntThistle.Click += new System.EventHandler(this.bntThistle_Click);
+            // 
+            // bntLime
+            // 
+            this.bntLime.BackColor = System.Drawing.Color.Lime;
+            this.bntLime.Location = new System.Drawing.Point(88, 81);
+            this.bntLime.Name = "bntLime";
+            this.bntLime.Size = new System.Drawing.Size(35, 33);
+            this.bntLime.TabIndex = 10;
+            this.bntLime.UseVisualStyleBackColor = false;
+            this.bntLime.Click += new System.EventHandler(this.bntLime_Click);
+            // 
+            // bntMoccassin
+            // 
+            this.bntMoccassin.BackColor = System.Drawing.Color.Moccasin;
+            this.bntMoccassin.Location = new System.Drawing.Point(47, 81);
+            this.bntMoccassin.Name = "bntMoccassin";
+            this.bntMoccassin.Size = new System.Drawing.Size(35, 33);
+            this.bntMoccassin.TabIndex = 9;
+            this.bntMoccassin.UseVisualStyleBackColor = false;
+            this.bntMoccassin.Click += new System.EventHandler(this.bntMoccassin_Click);
+            // 
+            // bntTan
+            // 
+            this.bntTan.BackColor = System.Drawing.Color.Tan;
+            this.bntTan.Location = new System.Drawing.Point(6, 81);
+            this.bntTan.Name = "bntTan";
+            this.bntTan.Size = new System.Drawing.Size(35, 33);
+            this.bntTan.TabIndex = 8;
+            this.bntTan.UseVisualStyleBackColor = false;
+            this.bntTan.Click += new System.EventHandler(this.bntTan_Click);
+            // 
+            // bntSilver
+            // 
+            this.bntSilver.BackColor = System.Drawing.Color.Silver;
+            this.bntSilver.Location = new System.Drawing.Point(88, 42);
+            this.bntSilver.Name = "bntSilver";
+            this.bntSilver.Size = new System.Drawing.Size(35, 33);
+            this.bntSilver.TabIndex = 7;
+            this.bntSilver.UseVisualStyleBackColor = false;
+            this.bntSilver.Click += new System.EventHandler(this.bntSilver_Click);
+            // 
+            // bntGray
+            // 
+            this.bntGray.BackColor = System.Drawing.Color.Gray;
+            this.bntGray.Location = new System.Drawing.Point(47, 42);
+            this.bntGray.Name = "bntGray";
+            this.bntGray.Size = new System.Drawing.Size(35, 33);
+            this.bntGray.TabIndex = 6;
+            this.bntGray.UseVisualStyleBackColor = false;
+            this.bntGray.Click += new System.EventHandler(this.bntGray_Click);
+            // 
+            // bntBlack
+            // 
+            this.bntBlack.BackColor = System.Drawing.Color.Black;
+            this.bntBlack.Location = new System.Drawing.Point(6, 42);
+            this.bntBlack.Name = "bntBlack";
+            this.bntBlack.Size = new System.Drawing.Size(35, 33);
+            this.bntBlack.TabIndex = 5;
+            this.bntBlack.UseVisualStyleBackColor = false;
+            this.bntBlack.Click += new System.EventHandler(this.bntBlack_Click);
+            // 
+            // bntWhite
+            // 
+            this.bntWhite.BackColor = System.Drawing.Color.White;
+            this.bntWhite.Location = new System.Drawing.Point(129, 42);
+            this.bntWhite.Name = "bntWhite";
+            this.bntWhite.Size = new System.Drawing.Size(35, 33);
+            this.bntWhite.TabIndex = 4;
+            this.bntWhite.UseVisualStyleBackColor = false;
+            this.bntWhite.Click += new System.EventHandler(this.bntWhite_Click);
+            // 
+            // bntGreen
+            // 
+            this.bntGreen.BackColor = System.Drawing.Color.Green;
+            this.bntGreen.Location = new System.Drawing.Point(129, 3);
+            this.bntGreen.Name = "bntGreen";
+            this.bntGreen.Size = new System.Drawing.Size(35, 33);
+            this.bntGreen.TabIndex = 3;
+            this.bntGreen.UseVisualStyleBackColor = false;
+            this.bntGreen.Click += new System.EventHandler(this.bntGreen_Click);
+            // 
+            // bntBlue
+            // 
+            this.bntBlue.BackColor = System.Drawing.Color.Blue;
+            this.bntBlue.Location = new System.Drawing.Point(88, 3);
+            this.bntBlue.Name = "bntBlue";
+            this.bntBlue.Size = new System.Drawing.Size(35, 33);
+            this.bntBlue.TabIndex = 2;
+            this.bntBlue.UseVisualStyleBackColor = false;
+            this.bntBlue.Click += new System.EventHandler(this.bntBlue_Click);
+            // 
+            // bntRed
+            // 
+            this.bntRed.BackColor = System.Drawing.Color.Red;
+            this.bntRed.Location = new System.Drawing.Point(47, 3);
+            this.bntRed.Name = "bntRed";
+            this.bntRed.Size = new System.Drawing.Size(35, 33);
+            this.bntRed.TabIndex = 1;
+            this.bntRed.UseVisualStyleBackColor = false;
+            this.bntRed.Click += new System.EventHandler(this.bntRed_Click);
+            // 
+            // bntYellow
+            // 
+            this.bntYellow.BackColor = System.Drawing.Color.Yellow;
+            this.bntYellow.Location = new System.Drawing.Point(6, 3);
+            this.bntYellow.Name = "bntYellow";
+            this.bntYellow.Size = new System.Drawing.Size(35, 33);
+            this.bntYellow.TabIndex = 0;
+            this.bntYellow.UseVisualStyleBackColor = false;
+            this.bntYellow.Click += new System.EventHandler(this.bntYellow_Click);
             // 
             // tsMain
             // 
@@ -109,42 +291,42 @@
             // створитиToolStripMenuItem
             // 
             this.створитиToolStripMenuItem.Name = "створитиToolStripMenuItem";
-            this.створитиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.створитиToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.створитиToolStripMenuItem.Text = "Створити";
             this.створитиToolStripMenuItem.Click += new System.EventHandler(this.CreateToolStripMenuItem_Click);
             // 
             // додатиМодульToolStripMenuItem
             // 
             this.додатиМодульToolStripMenuItem.Name = "додатиМодульToolStripMenuItem";
-            this.додатиМодульToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.додатиМодульToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.додатиМодульToolStripMenuItem.Text = "Додати модуль";
             this.додатиМодульToolStripMenuItem.Click += new System.EventHandler(this.addModuleToolStripMenuItem_Click);
             // 
             // відкритиToolStripMenuItem
             // 
             this.відкритиToolStripMenuItem.Name = "відкритиToolStripMenuItem";
-            this.відкритиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.відкритиToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.відкритиToolStripMenuItem.Text = "Відкрити";
             this.відкритиToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // зберегтиToolStripMenuItem
             // 
             this.зберегтиToolStripMenuItem.Name = "зберегтиToolStripMenuItem";
-            this.зберегтиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.зберегтиToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.зберегтиToolStripMenuItem.Text = "Зберегти";
             this.зберегтиToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
             // 
             // зберегтиЯкToolStripMenuItem
             // 
             this.зберегтиЯкToolStripMenuItem.Name = "зберегтиЯкToolStripMenuItem";
-            this.зберегтиЯкToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.зберегтиЯкToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.зберегтиЯкToolStripMenuItem.Text = "Зберегти як..";
             this.зберегтиЯкToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // вихідToolStripMenuItem
             // 
             this.вихідToolStripMenuItem.Name = "вихідToolStripMenuItem";
-            this.вихідToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.вихідToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.вихідToolStripMenuItem.Text = "Вихід";
             // 
             // toolStripSeparator3
@@ -208,6 +390,10 @@
             this.Name = "MainForm";
             this.Text = "MainForm";
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbWidth)).EndInit();
+            this.panel2.ResumeLayout(false);
             this.tsMain.ResumeLayout(false);
             this.tsMain.PerformLayout();
             this.ResumeLayout(false);
@@ -235,5 +421,20 @@
         private ToolStripButton tsbUnDo;
         private ToolStripButton tsbReDo;
         private ToolStripMenuItem додатиМодульToolStripMenuItem;
+        private TrackBar tbWidth;
+        private Panel panel2;
+        private Button bntThistle;
+        private Button bntLime;
+        private Button bntMoccassin;
+        private Button bntTan;
+        private Button bntSilver;
+        private Button bntGray;
+        private Button bntBlack;
+        private Button bntWhite;
+        private Button bntGreen;
+        private Button bntBlue;
+        private Button bntRed;
+        private Button bntYellow;
+        private Label lblWidth;
     }
 }
