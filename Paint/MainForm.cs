@@ -21,7 +21,7 @@ namespace Paint
         private bool _isClicked;
         Bitmap _temp;
         private Pen pen;
-        //XmlSerializer serializer = new XmlSerializer(typeof(List<IPaintable>));
+        XmlSerializer serializer = new XmlSerializer(typeof(List<UniObj>));
         private string _currentFile;
 
         private Action<Graphics, Pen, int, int> Draw;
@@ -32,6 +32,7 @@ namespace Paint
         private UniObj _obj;
         private List<UniObj> _currentHistory = new List<UniObj>();
         private List<UniObj> _redoList = new List<UniObj>();
+        private List<IPaintable> _loadedTools = new List<IPaintable>();
 
         public MainForm()
         {
@@ -70,7 +71,7 @@ namespace Paint
                     using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
                     {
                         fs.SetLength(0);
-                        //serializer.Serialize(fs, _history);
+                        serializer.Serialize(fs, _currentHistory);
                         _currentFile = saveFileDialog.FileName;
                         this.Text = _currentFile;
                     }
@@ -80,7 +81,7 @@ namespace Paint
             {
                 using (FileStream fs = new FileStream(_currentFile, FileMode.OpenOrCreate))
                 {
-                    //serializer.Serialize(fs, _history);
+                    serializer.Serialize(fs, _currentHistory);
                 }
             }
             saveFileDialog.Reset();
@@ -110,7 +111,7 @@ namespace Paint
                             break;
                         case ".xml":
                             fs.SetLength(0);
-                            //serializer.Serialize(fs, _history);
+                            serializer.Serialize(fs, _currentHistory);
                             _currentFile = saveFileDialog.FileName;
                             saveFileDialog.Reset();
                             this.Text = _currentFile;
@@ -131,7 +132,7 @@ namespace Paint
             }
 
             var obj = Activator.CreateInstance(type);
-
+            _loadedTools.Add((IPaintable)obj);
 
 
             var toolName = GetPropertyFromType<string>(type, nameof(IPaintable.ToolTitle), obj);
@@ -184,19 +185,41 @@ namespace Paint
             {
                 using (FileStream fs = new FileStream(String.Format(openFileDialog.FileName), FileMode.OpenOrCreate))
                 {
-                    //_history = serializer.Deserialize(fs) as List<BaseTool>;
+                    _currentHistory = serializer.Deserialize(fs) as List<UniObj>;
                 }
                 _currentFile = openFileDialog.FileName;
+                List<string> Errors = new List<string>();
+
                 using (var bitmap = new Bitmap(pbMain.Width, pbMain.Height))
                 using (var graphics = Graphics.FromImage(bitmap))
                 {
                     GetPen();
-                    //foreach (var bs in _history)
-                    //{
-                    //    bs.Draw(graphics, pen);
-                    //    pbMain.Image = (Bitmap)bitmap.Clone();
+                    foreach (var bs in _currentHistory)
+                    {
+                        IPaintable paintable = _loadedTools.Where(paintable => paintable.ToolTitle == bs.Title).FirstOrDefault();
 
-                    //}
+                        if (paintable != null)
+                        {
+                            bs.Draw = paintable.Draw;
+                            bs.AddPoint = paintable.AddPoint;
+                            bs.DisposeItem = paintable.ClearObj;
+                            bs.AddPoint(bs.Start.X, bs.Start.Y);
+                            bs.Draw(graphics, pen, bs.End.X, bs.End.Y);
+                            pbMain.Image = (Bitmap)bitmap.Clone();
+                        }
+                        else
+                        {
+                            if (!Errors.Contains(bs.Title))
+                            {
+                                Errors.Add(bs.Title);
+                            }
+                        }
+                    }
+                    if (Errors.Count > 0)
+                    {
+                        MessageBox.Show("Відсутні наступні модулі: " + Environment.NewLine + String.Join(Environment.NewLine, Errors));
+                    }
+
                 }
                 _temp = (Bitmap)pbMain.Image.Clone();
                 this.Text = _currentFile;
@@ -212,7 +235,7 @@ namespace Paint
             if (_obj == null) return;
             _isClicked = false;
             _temp = (Bitmap)pbMain.Image.Clone();
-            _obj.end = e.Location;
+            _obj.End = e.Location;
             _currentHistory.Add(_obj.DeepCopy());
             _obj.DisposeItem();
             //DisposeItem?.Invoke();
@@ -230,7 +253,7 @@ namespace Paint
             if (_obj == null) return;
             _isClicked = true;
             _obj.AddPoint(e.X, e.Y);
-            _obj.start = e.Location;
+            _obj.Start = e.Location;
             _redoList = new List<UniObj>();
             //AddPoint?.Invoke(e.Location.X, e.Location.Y);
         }
@@ -310,8 +333,8 @@ namespace Paint
                 GetPen();
                 for (int i = 0; i < _currentHistory.Count; i++)
                 {
-                    _currentHistory[i].AddPoint(_currentHistory[i].start.X, _currentHistory[i].start.Y);
-                    _currentHistory[i].Draw(graphics, pen, _currentHistory[i].end.X, _currentHistory[i].end.Y);
+                    _currentHistory[i].AddPoint(_currentHistory[i].Start.X, _currentHistory[i].Start.Y);
+                    _currentHistory[i].Draw(graphics, pen, _currentHistory[i].End.X, _currentHistory[i].End.Y);
                 }
                 pbMain.Image?.Dispose();
                 pbMain.Image = (Bitmap)bitmap.Clone();
@@ -336,27 +359,29 @@ namespace Paint
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //currentFile = "";
-            //this.Text = "untitled";
-            //saveFileDialog.Reset();
-            //if (_history.Count != 0)
-            //{
-            //    DialogResult dialog = MessageBox.Show(
-            //        "Збереги в файл?",
-            //        "Зберегти зміни?",
-            //        MessageBoxButtons.YesNo,
-            //        MessageBoxIcon.Warning
-            //    );
-            //    if (dialog == DialogResult.Yes)
-            //    {
-            //        SaveFile("xml files(*.xml) | *.xml");
-            //    }
+            _currentFile = "";
+            this.Text = "untitled";
+            saveFileDialog.Reset();
+            if (_currentHistory.Count != 0)
+            {
+                DialogResult dialog = MessageBox.Show(
+                    "Збереги в файл?",
+                    "Зберегти зміни?",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
+                if (dialog == DialogResult.Yes)
+                {
+                    SaveFile("xml files(*.xml) | *.xml");
+                }
 
-            //    _history.Clear();
-            //    _temp = new Bitmap(pbMain.Width, pbMain.Height);
-            //    pbMain.Image = _temp;
-            //    HilightMenuItem();
-            //}
+                _currentHistory.Clear();
+                pbMain.Image?.Dispose();
+                pbMain.Image = new Bitmap(pbMain.Width, pbMain.Height);
+                _temp = (Bitmap)pbMain.Image.Clone();
+
+                HilightMenuItem();
+            }
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -370,6 +395,5 @@ namespace Paint
         }
 
         #endregion
-
     }
 }
