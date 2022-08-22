@@ -31,6 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pbMain = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.lblUsedMods = new System.Windows.Forms.Label();
             this.tbWidth = new System.Windows.Forms.TrackBar();
             this.lblWidth = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -64,6 +66,7 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
             this.panel1.SuspendLayout();
+            this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbWidth)).BeginInit();
             this.panel2.SuspendLayout();
             this.tsMain.SuspendLayout();
@@ -84,6 +87,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.tbWidth);
             this.panel1.Controls.Add(this.lblWidth);
             this.panel1.Controls.Add(this.panel2);
@@ -92,6 +96,24 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(173, 425);
             this.panel1.TabIndex = 1;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.lblUsedMods);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel3.Location = new System.Drawing.Point(0, 305);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(173, 120);
+            this.panel3.TabIndex = 3;
+            // 
+            // lblUsedMods
+            // 
+            this.lblUsedMods.AutoSize = true;
+            this.lblUsedMods.Location = new System.Drawing.Point(5, 7);
+            this.lblUsedMods.Name = "lblUsedMods";
+            this.lblUsedMods.Size = new System.Drawing.Size(106, 15);
+            this.lblUsedMods.TabIndex = 0;
+            this.lblUsedMods.Text = "Підключені моди:";
             // 
             // tbWidth
             // 
@@ -392,6 +414,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbWidth)).EndInit();
             this.panel2.ResumeLayout(false);
             this.tsMain.ResumeLayout(false);
@@ -436,5 +460,7 @@
         private Button bntRed;
         private Button bntYellow;
         private Label lblWidth;
+        private Panel panel3;
+        private Label lblUsedMods;
     }
 }

@@ -135,7 +135,7 @@ namespace Paint
             }
 
             var obj = Activator.CreateInstance(type);
-            _loadedTools.Add((IPaintable)obj);
+
 
 
             var toolName = GetPropertyFromType<string>(type, nameof(IPaintable.ToolTitle), obj);
@@ -147,26 +147,31 @@ namespace Paint
             var onClickMethodADispose = type.GetMethod(nameof(IPaintable.ClearObj), BindingFlags.Public | BindingFlags.Instance);
             var actionDispose = (Action)Delegate.CreateDelegate(typeof(Action), obj, onClickMethodADispose);
 
-
-            var onClick = new EventHandler((x, y) =>
+            if (_loadedTools.Where(x => x.ToolTitle == toolName).Count() == 0)
             {
-                _currentTool = toolName;
-                //Draw = actionDraw;
-                //AddPoint = actionAddPoint;
-                //DisposeItem = actionDispose;
-                _obj = new UniObj()
+                lblUsedMods.Text += Environment.NewLine + obj.GetType().Name;
+                _loadedTools.Add((IPaintable)obj);
+
+                var onClick = new EventHandler((x, y) =>
                 {
-                    Title = toolName,
-                    Draw = actionDraw,
-                    AddPoint = actionAddPoint,
-                    DisposeItem = actionDispose
-                };
+                    _currentTool = toolName;
+                    //Draw = actionDraw;
+                    //AddPoint = actionAddPoint;
+                    //DisposeItem = actionDispose;
+                    _obj = new UniObj()
+                    {
+                        Title = toolName,
+                        Draw = actionDraw,
+                        AddPoint = actionAddPoint,
+                        DisposeItem = actionDispose
+                    };
 
-            });
+                });
 
-            ToolStripButton toolStripButton = new ToolStripButton(toolName, icon, onClick, toolName);
-            toolStripButton.Click += ToolStripButton_Click;
-            tsMain.Items.Add(toolStripButton);
+                ToolStripButton toolStripButton = new ToolStripButton(toolName, icon, onClick, toolName);
+                toolStripButton.Click += ToolStripButton_Click;
+                tsMain.Items.Add(toolStripButton);
+            }
         }
 
         private T GetPropertyFromType<T>(Type type, string propertyTitle, object instance)
@@ -462,7 +467,7 @@ namespace Paint
             lblWidth.Text = "Товшина " + width + " px";
             pen.Width = width;
         }
-        
+
         #endregion
     }
 }
