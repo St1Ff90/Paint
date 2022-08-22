@@ -19,17 +19,15 @@ namespace Paint
     public partial class MainForm : Form
     {
         private bool _isClicked;
-        Bitmap _temp;
-        private Pen pen;
-        XmlSerializer serializer = new XmlSerializer(typeof(List<UniObj>));
-        private string _currentFile;
-
-        private Action<Graphics, Pen, int, int> Draw;
-        private Action<int, int> AddPoint;
-        private Action DisposeItem;
         private string _currentTool;
-
+        private string _currentFile;
+        private Pen pen;
         private UniObj _obj;
+        private Bitmap _temp;
+        private XmlSerializer serializer = new XmlSerializer(typeof(List<UniObj>));
+        //private Action<Graphics, Pen, int, int> Draw;
+        //private Action<int, int> AddPoint;
+        //private Action DisposeItem;
         private List<UniObj> _currentHistory = new List<UniObj>();
         private List<UniObj> _redoList = new List<UniObj>();
         private List<IPaintable> _loadedTools = new List<IPaintable>();
@@ -41,6 +39,7 @@ namespace Paint
             _temp = (Bitmap)pbMain.Image.Clone();
             GetPen();
         }
+
         #region Private Methods
         private void GetPen()
         {
@@ -128,7 +127,6 @@ namespace Paint
             }
         }
 
-
         private void GenerateButton(Type type)
         {
             if (type.GetInterface(typeof(IPaintable).FullName) == null)
@@ -153,9 +151,9 @@ namespace Paint
             var onClick = new EventHandler((x, y) =>
             {
                 _currentTool = toolName;
-                Draw = actionDraw;
-                AddPoint = actionAddPoint;
-                DisposeItem = actionDispose;
+                //Draw = actionDraw;
+                //AddPoint = actionAddPoint;
+                //DisposeItem = actionDispose;
                 _obj = new UniObj()
                 {
                     Title = toolName,
@@ -220,11 +218,11 @@ namespace Paint
                             }
                         }
                     }
+
                     if (Errors.Count > 0)
                     {
                         MessageBox.Show("Відсутні наступні модулі: " + Environment.NewLine + String.Join(Environment.NewLine, Errors));
                     }
-
                 }
                 _temp = (Bitmap)pbMain.Image.Clone();
                 this.Text = _currentFile;
@@ -250,7 +248,6 @@ namespace Paint
                 UniObj uni = new UniObj();
                 uni = _obj;
             }
-
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -465,10 +462,7 @@ namespace Paint
             lblWidth.Text = "Товшина " + width + " px";
             pen.Width = width;
         }
+        
         #endregion
-
-
-
-
     }
 }
