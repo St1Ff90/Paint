@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModderPack", "ModderPack\ModderPack.csproj", "{F4DAAF1B-A73D-40D3-A7C5-3563E2F2B933}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj", "{25C63DC1-8776-4A8B-B6CD-79C1E2675453}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paint", "Paint\Paint.csproj", "{59AC050B-9981-487A-8B96-59FB6AACEE8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4DAAF1B-A73D-40D3-A7C5-3563E2F2B933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4DAAF1B-A73D-40D3-A7C5-3563E2F2B933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4DAAF1B-A73D-40D3-A7C5-3563E2F2B933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4DAAF1B-A73D-40D3-A7C5-3563E2F2B933}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25C63DC1-8776-4A8B-B6CD-79C1E2675453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25C63DC1-8776-4A8B-B6CD-79C1E2675453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25C63DC1-8776-4A8B-B6CD-79C1E2675453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25C63DC1-8776-4A8B-B6CD-79C1E2675453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59AC050B-9981-487A-8B96-59FB6AACEE8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59AC050B-9981-487A-8B96-59FB6AACEE8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59AC050B-9981-487A-8B96-59FB6AACEE8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59AC050B-9981-487A-8B96-59FB6AACEE8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A5DEAADD-3442-430C-B7C1-24A2B72970B6}
+	EndGlobalSection
+EndGlobal
