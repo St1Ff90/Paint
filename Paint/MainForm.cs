@@ -44,9 +44,13 @@ namespace Paint
         #region Private Methods
         private void GetPen()
         {
-            pen = new Pen(Color.Black, 3);
+            int width = 3;
+            pen = new Pen(Color.Black, width);
             pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+            lblWidth.Text = "Товшина " + width + " px";
+            tbWidth.Value = width;
+            bntBlack.Select();
         }
 
         private void HilightMenuItem()
