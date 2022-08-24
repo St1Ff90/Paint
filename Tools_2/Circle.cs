@@ -1,25 +1,18 @@
 ﻿using ModderPack;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tools.Properties;
+using Tools_2.Properties;
 
-namespace Tools
+namespace Tools2
 {
-    internal class Ellipse : IPaintable
+    internal class Circle : IPaintable
     {
         public Point _end;
         public Point _start;
-        public Bitmap Icon => Resources.Ellipse;
+        public Bitmap Icon => Resources.Circle;
 
-        public string ToolTitle => nameof(Ellipse);
+        public string ToolTitle => nameof(Circle);
 
-        public int needPointsToDraw => 2;
-
-        public void Start(int x, int y)
+        public void AddPoint(int x, int y)
         {
             _start = new Point(x, y);
         }
@@ -35,8 +28,18 @@ namespace Tools
 
             int width = _end.X - _start.X;
             int height = _end.Y - _start.Y;
+            int side = width;
 
-            graphics.DrawEllipse(pen, _start.X, _start.Y, width, height);
+            if (width < height)
+            {
+                side = width;
+            }
+            else
+            {
+                side = height;
+            }
+
+            graphics.DrawEllipse(pen, _start.X, _start.Y, side, side);
         }
 
         public void Fill(Graphics graphics, Brush brush, Point start, Point end)

@@ -11,15 +11,17 @@ namespace Tools
 {
     public class Line : IPaintable
     {
-        public Point _end;
-        public Point _start;
+        public List<Point> _points;
         public Bitmap Icon => Resources.Line;
 
         public string ToolTitle => nameof(Line);
 
-        public void AddPoint(int x, int y)
+        public int needPointsToDraw => 2;
+
+        public void Start(int x, int y)
         {
-            _start = new Point(x, y);
+            _points = new List<Point>();
+            _points.Add(new Point(x, y));
         }
 
         public void ClearObj()
@@ -29,8 +31,16 @@ namespace Tools
 
         public void Draw(Graphics graphics, Pen pen, int x, int y)
         {
-            _end = new Point(x, y);
-            graphics.DrawLine(pen, _start, _end);
+            if(_points.Count == 2)
+            {
+                _points[1] = new Point(x, y);
+            }
+            else
+            {
+                _points.Add(new Point(x, y));
+
+            }
+            graphics.DrawLine(pen, _points[0], _points[_points.Count - 1]);
         }
 
         public void Fill(Graphics graphics, Brush brush, Point start, Point end)

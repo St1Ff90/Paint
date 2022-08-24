@@ -12,7 +12,9 @@ namespace Tools
 
         public string ToolTitle => nameof(Circle);
 
-        public void AddPoint(int x, int y)
+        public int needPointsToDraw => 2;
+
+        public void Start(int x, int y)
         {
             _start = new Point(x, y);
         }

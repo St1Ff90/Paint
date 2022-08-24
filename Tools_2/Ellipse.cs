@@ -5,21 +5,19 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tools.Properties;
+using Tools_2.Properties;
 
-namespace Tools
+namespace Tools2
 {
     internal class Ellipse : IPaintable
     {
         public Point _end;
         public Point _start;
-        public Bitmap Icon => Resources.Ellipse;
+        public Bitmap Icon => Resources.Ellipse1;
 
         public string ToolTitle => nameof(Ellipse);
 
-        public int needPointsToDraw => 2;
-
-        public void Start(int x, int y)
+        public void AddPoint(int x, int y)
         {
             _start = new Point(x, y);
         }

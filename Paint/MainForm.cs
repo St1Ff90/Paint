@@ -21,16 +21,20 @@ namespace Paint
         private bool _isClicked;
         private string _currentTool;
         private string _currentFile;
+        private int _maxPointsCount;
         private Pen pen;
-        private UniObj _obj;
         private Bitmap _temp;
-        private XmlSerializer serializer = new XmlSerializer(typeof(List<UniObj>));
-        //private Action<Graphics, Pen, int, int> Draw;
-        //private Action<int, int> AddPoint;
-        //private Action DisposeItem;
-        private List<UniObj> _currentHistory = new List<UniObj>();
-        private List<UniObj> _redoList = new List<UniObj>();
-        private List<IPaintable> _loadedTools = new List<IPaintable>();
+
+        private Action<Graphics, Pen, int, int> Draw;
+        private Action<int, int> Start;
+        private Action DisposeItem;
+        private List<Figure> _currentHistory = new List<Figure>();
+        private List<Figure> _redoList = new List<Figure>();
+
+
+
+        private Figure _figure;
+        private static string pathToModsList = @"ToolsDllPath.xml";
 
         public MainForm()
         {
@@ -40,30 +44,25 @@ namespace Paint
             GetPen();
         }
 
-        #region Private Methods
-        private void GetPen()
+        private string FindMoodConnectionString(string modeName)
         {
-            int width = 3;
-            pen = new Pen(Color.Black, width);
-            pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-            pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-            lblWidth.Text = "Товшина " + width + " px";
-            tbWidth.Value = width;
-            bntBlack.Select();
-        }
+            List<ModPath>? list = new List<ModPath>();
 
-        private void HilightMenuItem()
-        {
-            foreach (ToolStripItem item in tsMain.Items)
+            if (File.Exists(pathToModsList))
             {
-                item.BackColor = SystemColors.Control;
-                if (item.Name == _currentTool)
+                using (FileStream fs = new FileStream(pathToModsList, FileMode.OpenOrCreate))
                 {
-                    item.BackColor = SystemColors.ActiveCaption;
+                    XmlSerializer serializerPath = new XmlSerializer(typeof(List<ModPath>));
+                    list = (List<ModPath>?)serializerPath.Deserialize(fs);
                 }
             }
+            ModPath? modPath = list?.Where(x => x.Name == modeName).FirstOrDefault();
+            string? result = modPath?.Path;
+            return result;
         }
 
+
+        #region Save/Load
         private void SaveFile(string neededFileTypes)
         {
             saveFileDialog.Filter = neededFileTypes;
@@ -74,10 +73,7 @@ namespace Paint
                 {
                     using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
                     {
-                        fs.SetLength(0);
-                        serializer.Serialize(fs, _currentHistory);
-                        _currentFile = saveFileDialog.FileName;
-                        this.Text = _currentFile;
+                        SaveFileToXML(fs);
                     }
                 }
             }
@@ -85,7 +81,7 @@ namespace Paint
             {
                 using (FileStream fs = new FileStream(_currentFile, FileMode.OpenOrCreate))
                 {
-                    serializer.Serialize(fs, _currentHistory);
+                    SaveFileToXML(fs);
                 }
             }
             saveFileDialog.Reset();
@@ -114,11 +110,8 @@ namespace Paint
                             }
                             break;
                         case ".xml":
-                            fs.SetLength(0);
-                            serializer.Serialize(fs, _currentHistory);
-                            _currentFile = saveFileDialog.FileName;
+                            SaveFileToXML(fs);
                             saveFileDialog.Reset();
-                            this.Text = _currentFile;
                             break;
                         default:
                             break;
@@ -127,7 +120,66 @@ namespace Paint
             }
         }
 
-        private void GenerateButton(Type type)
+        private void SaveFileToXML(FileStream fs)
+        {
+            fs.SetLength(0);
+            XmlSerializer serializerFigure = new XmlSerializer(typeof(List<Figure>));
+            serializerFigure.Serialize(fs, _currentHistory);
+            _currentFile = saveFileDialog.FileName;
+            this.Text = _currentFile;
+        }
+
+        private void LoadFile(string neededFileTypes)
+        {
+            openFileDialog.Filter = neededFileTypes;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                using (FileStream fs = new FileStream(String.Format(openFileDialog.FileName), FileMode.OpenOrCreate))
+                {
+                    XmlSerializer serializerFigure = new XmlSerializer(typeof(List<Figure>));
+                    _currentHistory = (List<Figure>)serializerFigure.Deserialize(fs);
+                }
+                _currentFile = openFileDialog.FileName;
+                DrawFromHyistory();
+                openFileDialog.Reset();
+            }
+        }
+
+        #endregion
+
+        #region ModulesManager
+        private void addModuleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog.Filter = "Dll files(*.dll) | *.dll";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                LoadModulesFromFile(openFileDialog.FileName);
+                List<ModPath> modPaths = new List<ModPath>();
+                SaveModulesToXML(modPaths);
+                openFileDialog.Reset();
+            }
+        }
+
+        private List<ModPath> LoadModulesFromFile(string path)
+        {
+            var assembly = Assembly.LoadFrom(path);
+            var types = assembly
+                .GetTypes()
+                .Where(x =>
+                    x.GetInterface(typeof(IPaintable).FullName) != null);
+
+            List<ModPath> modPaths = new List<ModPath>();
+
+            foreach (var type in types)
+            {
+                GenerateDelegate(type);
+                modPaths.Add(new ModPath { Name = type.Name, Path = openFileDialog.FileName });
+            }
+
+            return modPaths;
+        }
+
+        private void GenerateDelegate(Type type)
         {
             if (type.GetInterface(typeof(IPaintable).FullName) == null)
             {
@@ -135,37 +187,27 @@ namespace Paint
             }
 
             var obj = Activator.CreateInstance(type);
-
-
-
             var toolName = GetPropertyFromType<string>(type, nameof(IPaintable.ToolTitle), obj);
+            var maxPoints = GetPropertyFromType<int>(type, nameof(IPaintable.needPointsToDraw), obj);
             var icon = GetPropertyFromType<Bitmap>(type, nameof(IPaintable.Icon), obj);
             var onClickMethodDraw = type.GetMethod(nameof(IPaintable.Draw), BindingFlags.Public | BindingFlags.Instance);
             var actionDraw = (Action<Graphics, Pen, int, int>)Delegate.CreateDelegate(typeof(Action<Graphics, Pen, int, int>), obj, onClickMethodDraw);
-            var onClickMethodAddPoint = type.GetMethod(nameof(IPaintable.AddPoint), BindingFlags.Public | BindingFlags.Instance);
-            var actionAddPoint = (Action<int, int>)Delegate.CreateDelegate(typeof(Action<int, int>), obj, onClickMethodAddPoint);
+            var onClickMethodStart = type.GetMethod(nameof(IPaintable.Start), BindingFlags.Public | BindingFlags.Instance);
+            var actionAddPoint = (Action<int, int>)Delegate.CreateDelegate(typeof(Action<int, int>), obj, onClickMethodStart);
             var onClickMethodADispose = type.GetMethod(nameof(IPaintable.ClearObj), BindingFlags.Public | BindingFlags.Instance);
             var actionDispose = (Action)Delegate.CreateDelegate(typeof(Action), obj, onClickMethodADispose);
 
-            if (_loadedTools.Where(x => x.ToolTitle == toolName).Count() == 0)
+            if (tsMain.Items.Find(toolName, false).Count() == 0)
             {
                 lblUsedMods.Text += Environment.NewLine + obj.GetType().Name;
-                _loadedTools.Add((IPaintable)obj);
 
                 var onClick = new EventHandler((x, y) =>
                 {
                     _currentTool = toolName;
-                    //Draw = actionDraw;
-                    //AddPoint = actionAddPoint;
-                    //DisposeItem = actionDispose;
-                    _obj = new UniObj()
-                    {
-                        Title = toolName,
-                        Draw = actionDraw,
-                        AddPoint = actionAddPoint,
-                        DisposeItem = actionDispose
-                    };
-
+                    Draw = actionDraw;
+                    Start = actionAddPoint;
+                    DisposeItem = actionDispose;
+                    _maxPointsCount = maxPoints;
                 });
 
                 ToolStripButton toolStripButton = new ToolStripButton(toolName, icon, onClick, toolName);
@@ -186,85 +228,68 @@ namespace Paint
             return (T)propertyValue;
         }
 
-        private void LoadFile(string neededFileTypes)
+        private static void SaveModulesToXML(List<ModPath> modPaths)
         {
-            openFileDialog.Filter = neededFileTypes;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (modPaths.Count > 0) // тут дописывать а не перетерать
             {
-                using (FileStream fs = new FileStream(String.Format(openFileDialog.FileName), FileMode.OpenOrCreate))
+                XmlSerializer serializerPath = new XmlSerializer(typeof(List<ModPath>));
+                using (FileStream fs = new FileStream(pathToModsList, FileMode.OpenOrCreate))
                 {
-                    _currentHistory = serializer.Deserialize(fs) as List<UniObj>;
+                    fs.SetLength(0);
+                    serializerPath.Serialize(fs, modPaths);
                 }
-                _currentFile = openFileDialog.FileName;
-                List<string> Errors = new List<string>();
-
-                using (var bitmap = new Bitmap(pbMain.Width, pbMain.Height))
-                using (var graphics = Graphics.FromImage(bitmap))
-                {
-                    foreach (var bs in _currentHistory)
-                    {
-                        IPaintable paintable = _loadedTools.Where(paintable => paintable.ToolTitle == bs.Title).FirstOrDefault();
-
-                        if (paintable != null)
-                        {
-                            pen = new Pen(bs.Color, bs.Width);
-                            bs.Draw = paintable.Draw;
-                            bs.AddPoint = paintable.AddPoint;
-                            bs.DisposeItem = paintable.ClearObj;
-                            bs.AddPoint(bs.Start.X, bs.Start.Y);
-                            bs.Draw(graphics, pen, bs.End.X, bs.End.Y);
-                            pbMain.Image = (Bitmap)bitmap.Clone();
-                        }
-                        else
-                        {
-                            if (!Errors.Contains(bs.Title))
-                            {
-                                Errors.Add(bs.Title);
-                            }
-                        }
-                    }
-
-                    if (Errors.Count > 0)
-                    {
-                        MessageBox.Show("Відсутні наступні модулі: " + Environment.NewLine + String.Join(Environment.NewLine, Errors));
-                    }
-                }
-                _temp = (Bitmap)pbMain.Image.Clone();
-                this.Text = _currentFile;
-                openFileDialog.Reset();
             }
         }
 
         #endregion
 
+        #region Service Methods
+
+        private void GetPen()
+        {
+            int width = 3;
+            pen = new Pen(Color.Black, width);
+            pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+            pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+            lblWidth.Text = "Товшина " + width + " px";
+            tbWidth.Value = width;
+            bntBlack.Select();
+        }
+
+        private void HilightMenuItem()
+        {
+            foreach (ToolStripItem item in tsMain.Items)
+            {
+                item.BackColor = SystemColors.Control;
+                if (item.Name == _currentTool)
+                {
+                    item.BackColor = SystemColors.ActiveCaption;
+                }
+            }
+        }
+        #endregion
+
         #region PictureBox Buttons
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (_obj == null) return;
+            if (_currentTool == null) return;
             _isClicked = false;
+            _currentHistory.Add(_figure.DeepCopy());
+            _redoList = new List<Figure>();
             _temp = (Bitmap)pbMain.Image.Clone();
-            _obj.End = e.Location;
-            _currentHistory.Add(_obj.DeepCopy());
-            _obj.DisposeItem();
-            //DisposeItem?.Invoke();
-
-            if (_currentTool is not null)
-            {
-                UniObj uni = new UniObj();
-                uni = _obj;
-            }
+            DisposeItem?.Invoke();
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_obj == null) return;
+            if (_currentTool == null) return;
             _isClicked = true;
-            _obj.Color = pen.Color;
-            _obj.Width = (int)pen.Width;
-            _obj.AddPoint(e.X, e.Y);
-            _obj.Start = e.Location;
-            _redoList = new List<UniObj>();
-            //AddPoint?.Invoke(e.Location.X, e.Location.Y);
+            _figure = new Figure();
+            _figure.ToolTitle = _currentTool;
+            _figure.Color = pen.Color;
+            _figure.LineWidth = (int)pen.Width;
+            _figure.Points.Add(e.Location);
+            Start?.Invoke(e.Location.X, e.Location.Y);
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -274,8 +299,16 @@ namespace Paint
                 using (var bitmap = new Bitmap(_temp, pbMain.Width, pbMain.Height))
                 using (var graphics = Graphics.FromImage(bitmap))
                 {
-                    //Draw?.Invoke(graphics, pen, e.Location.X, e.Location.Y);
-                    _obj.Draw(graphics, pen, e.Location.X, e.Location.Y);
+                    if (_figure.Points.Count == _maxPointsCount)
+                    {
+                        _figure.Points[_maxPointsCount - 1] = new Point(e.Location.X, e.Location.Y);
+                    }
+                    else
+                    {
+                        _figure.Points.Add(e.Location);
+                    }
+
+                    Draw?.Invoke(graphics, pen, e.Location.X, e.Location.Y);
                     pbMain.Image?.Dispose();
                     pbMain.Image = (Bitmap)bitmap.Clone();
                 }
@@ -284,26 +317,6 @@ namespace Paint
         #endregion
 
         #region Menu Buttons
-        private void addModuleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog.Filter = "Dll files(*.dll) | *.dll";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                var assembly = Assembly.LoadFrom(openFileDialog.FileName);
-                var types = assembly
-                    .GetTypes()
-                    .Where(x =>
-                        x.GetInterface(typeof(IPaintable).FullName) != null);
-
-                foreach (var type in types)
-                {
-                    GenerateButton(type);
-                }
-
-                openFileDialog.Reset();
-            }
-        }
-
         private void ToolStripButton_Click(object? sender, EventArgs e)
         {
             HilightMenuItem();
@@ -335,18 +348,51 @@ namespace Paint
 
         private void DrawFromHyistory()
         {
+            List<string> Errors = new List<string>();
             using (var bitmap = new Bitmap(pbMain.Width, pbMain.Height))
             using (var graphics = Graphics.FromImage(bitmap))
             {
-                for (int i = 0; i < _currentHistory.Count; i++)
+                foreach (var figure in _currentHistory)
                 {
-                    pen = new Pen(_currentHistory[i].Color, _currentHistory[i].Width);
-                    _currentHistory[i].AddPoint(_currentHistory[i].Start.X, _currentHistory[i].Start.Y);
-                    _currentHistory[i].Draw(graphics, pen, _currentHistory[i].End.X, _currentHistory[i].End.Y);
+                    var toolStripButtonList = tsMain.Items.Find(figure.ToolTitle, false);
+
+                    if (toolStripButtonList.Count() == 0)
+                    {
+                        string connectionString = FindMoodConnectionString(figure.ToolTitle);
+
+                        if (connectionString != null)
+                        {
+                            LoadModulesFromFile(connectionString);
+                            toolStripButtonList = tsMain.Items.Find(figure.ToolTitle, false);
+                        }
+                        else
+                        {
+                            Errors.Add(figure.ToolTitle);
+                        }
+                    }
+
+                    if (toolStripButtonList.Count() != 0)
+                    {
+                        ToolStripItem toolStripButton = toolStripButtonList.First();
+                        pen = new Pen(figure.Color, figure.LineWidth);
+                        toolStripButton.PerformClick();
+
+                        for (int i = 0; i < figure.Points.Count - 1; i++)
+                        {
+                            Start?.Invoke(figure.Points[i].X, figure.Points[i].Y);
+                            Draw?.Invoke(graphics, pen, figure.Points[i + 1].X, figure.Points[i + 1].Y);
+                        }
+                        DisposeItem?.Invoke();
+                        pbMain.Image = (Bitmap)bitmap.Clone();
+                    }
                 }
-                pbMain.Image?.Dispose();
-                pbMain.Image = (Bitmap)bitmap.Clone();
-                _temp = (Bitmap)pbMain.Image.Clone();
+            }
+            _temp = (Bitmap)pbMain.Image.Clone();
+            this.Text = _currentFile;
+
+            if (Errors.Count > 0)
+            {
+                MessageBox.Show("Відсутні наступні модулі: " + Environment.NewLine + String.Join(Environment.NewLine, Errors));
             }
         }
 
@@ -469,5 +515,13 @@ namespace Paint
         }
 
         #endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string line = "Line";
+            ToolStripItem toolStripButton = tsMain.Items.Find(line, false).First();
+            toolStripButton.PerformClick();
+
+        }
     }
 }

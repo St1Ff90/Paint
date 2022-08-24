@@ -18,7 +18,9 @@ namespace Tools
 
         public string ToolTitle => nameof(Pancil);
 
-        public void AddPoint(int x, int y)
+        public int needPointsToDraw => int.MaxValue;
+
+        public void Start(int x, int y)
         {
             if (_points.Length <= _index)
             {
@@ -34,7 +36,7 @@ namespace Tools
             _index++;
         }
 
-        public Point[] GetPoints()
+        public Point[] GetPointsArr()
         {
             Point[] points = new Point[_index];
             for (int i = 0; i < _index; i++)
@@ -46,10 +48,10 @@ namespace Tools
 
         public void Draw(Graphics graphics, Pen pen, int x, int y)
         {
-            this.AddPoint(x, y);
-            if (this.GetPoints().Length >= 2)
+            this.Start(x, y);
+            if (this.GetPointsArr().Length >= 2)
             {
-                graphics.DrawLines(pen, this.GetPoints());
+                graphics.DrawLines(pen, this.GetPointsArr());
             }
         }
 

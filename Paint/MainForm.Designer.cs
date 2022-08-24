@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pbMain = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.lblUsedMods = new System.Windows.Forms.Label();
             this.tbWidth = new System.Windows.Forms.TrackBar();
@@ -87,6 +88,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.tbWidth);
             this.panel1.Controls.Add(this.lblWidth);
@@ -96,6 +98,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(173, 425);
             this.panel1.TabIndex = 1;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(62, 230);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // panel3
             // 
@@ -462,5 +474,6 @@
         private Label lblWidth;
         private Panel panel3;
         private Label lblUsedMods;
+        private Button button1;
     }
 }
