@@ -44,24 +44,6 @@ namespace Paint
             GetPen();
         }
 
-        private string FindMoodConnectionString(string modeName)
-        {
-            List<ModPath>? list = new List<ModPath>();
-
-            if (File.Exists(pathToModsList))
-            {
-                using (FileStream fs = new FileStream(pathToModsList, FileMode.OpenOrCreate))
-                {
-                    XmlSerializer serializerPath = new XmlSerializer(typeof(List<ModPath>));
-                    list = (List<ModPath>?)serializerPath.Deserialize(fs);
-                }
-            }
-            ModPath? modPath = list?.Where(x => x.Name == modeName).FirstOrDefault();
-            string? result = modPath?.Path;
-            return result;
-        }
-
-
         #region Save/Load
         private void SaveFile(string neededFileTypes)
         {
@@ -396,6 +378,23 @@ namespace Paint
             }
         }
 
+        private string? FindMoodConnectionString(string modeName)
+        {
+            List<ModPath>? list = new List<ModPath>();
+
+            if (File.Exists(pathToModsList))
+            {
+                using (FileStream fs = new FileStream(pathToModsList, FileMode.OpenOrCreate))
+                {
+                    XmlSerializer serializerPath = new XmlSerializer(typeof(List<ModPath>));
+                    list = (List<ModPath>?)serializerPath.Deserialize(fs);
+                }
+            }
+            ModPath? modPath = list?.Where(x => x.Name == modeName).FirstOrDefault();
+            string? result = modPath?.Path;
+            return result;
+        }
+
         private void tsbSave_Click(object sender, EventArgs e)
         {
             SaveFile("Dump files(*.xml) | *.xml");
@@ -516,12 +515,6 @@ namespace Paint
 
         #endregion
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string line = "Line";
-            ToolStripItem toolStripButton = tsMain.Items.Find(line, false).First();
-            toolStripButton.PerformClick();
-
-        }
+       
     }
 }

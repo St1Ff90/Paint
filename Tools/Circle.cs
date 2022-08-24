@@ -34,11 +34,11 @@ namespace Tools
 
             if (width < height)
             {
-                side = width;
+                side = height;
             }
             else
             {
-                side = height;
+                side = width;
             }
 
             graphics.DrawEllipse(pen, _start.X, _start.Y, side, side);
