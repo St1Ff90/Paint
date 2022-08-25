@@ -9,14 +9,14 @@ using Tools.Properties;
 
 namespace Tools
 {
-    public class Pancil : IPaintable
+    public class Pencil : IPaintable
     {
         public int _index = 0;
         public Point[] _points = new Point[2];
 
         public Bitmap Icon => Resources.Pencil;
 
-        public string ToolTitle => nameof(Pancil);
+        public string ToolTitle => nameof(Pencil);
 
         public int needPointsToDraw => int.MaxValue;
 
