@@ -24,10 +24,12 @@ namespace Paint
         private int _maxPointsCount;
         private Pen pen;
         private Bitmap _temp;
+        private Bitmap _currentLayer;
 
         private Action<Graphics, Pen, int, int> Draw;
         private Action<int, int> Start;
         private Action DisposeItem;
+        private Func<Point, Point, Point, double> Distance;
         private List<Figure> _currentHistory = new List<Figure>();
         private List<Figure> _redoList = new List<Figure>();
 
@@ -178,6 +180,8 @@ namespace Paint
             var actionAddPoint = (Action<int, int>)Delegate.CreateDelegate(typeof(Action<int, int>), obj, onClickMethodStart);
             var onClickMethodADispose = type.GetMethod(nameof(IPaintable.ClearObj), BindingFlags.Public | BindingFlags.Instance);
             var actionDispose = (Action)Delegate.CreateDelegate(typeof(Action), obj, onClickMethodADispose);
+            var onClickMethodFindDistance = type.GetMethod(nameof(IPaintable.Distance), BindingFlags.Public | BindingFlags.Instance);
+            var actionFindDistance = (Func<Point, Point, Point, double>)Delegate.CreateDelegate(typeof(Func<Point, Point, Point, double>), obj, onClickMethodFindDistance);
 
             if (tsMain.Items.Find(toolName, false).Count() == 0)
             {
@@ -190,6 +194,7 @@ namespace Paint
                     Start = actionAddPoint;
                     DisposeItem = actionDispose;
                     _maxPointsCount = maxPoints;
+                    Distance = actionFindDistance;
                 });
 
                 ToolStripButton toolStripButton = new ToolStripButton(toolName, icon, onClick, toolName);
@@ -265,13 +270,49 @@ namespace Paint
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (_currentTool == null) return;
-            _isClicked = true;
-            _figure = new Figure();
-            _figure.ToolTitle = _currentTool;
-            _figure.Color = pen.Color;
-            _figure.LineWidth = (int)pen.Width;
-            _figure.Points.Add(e.Location);
-            Start?.Invoke(e.Location.X, e.Location.Y);
+            if (_currentTool == "select")
+            {
+                if (_currentHistory.Count > 0)
+                {
+                    Figure figure = FindFogureByPoint(e.Location);
+                }
+            }
+            else
+            {
+                _isClicked = true;
+                _figure = new Figure();
+                _figure.ToolTitle = _currentTool;
+                _figure.Color = pen.Color;
+                _figure.LineWidth = (int)pen.Width;
+                _figure.Points.Add(e.Location);
+                Start?.Invoke(e.Location.X, e.Location.Y);
+            }
+        }
+
+        private Figure FindFogureByPoint(Point location)
+        {
+            (Figure?, double?) figureWithMinDistance = new(new Figure(), double.MaxValue);
+
+            foreach (Figure figure in _currentHistory)
+            {
+
+                var toolStripButton = tsMain.Items.Find(figure.ToolTitle, false).First();
+                toolStripButton.PerformClick();
+
+                for (int i = 0; i < figure.Points.Count - 1; i++)
+                {
+                    double? result = Distance?.Invoke(location, figure.Points[i], figure.Points[i + 1]);
+                    if (figureWithMinDistance.Item2 > result && result < 15)
+                    {
+                        figureWithMinDistance.Item1 = figure;
+                        figureWithMinDistance.Item2 = result;
+                    }
+                }
+
+            }
+            MessageBox.Show(figureWithMinDistance.Item1.ToolTitle);
+
+            return figureWithMinDistance.Item1;
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -293,8 +334,22 @@ namespace Paint
                     Draw?.Invoke(graphics, pen, e.Location.X, e.Location.Y);
                     pbMain.Image?.Dispose();
                     pbMain.Image = (Bitmap)bitmap.Clone();
+
                 }
+
             }
+        }
+
+
+        private Bitmap MergedBitmaps(Bitmap bmp1, Bitmap bmp2)
+        {
+            Bitmap result = new Bitmap(pbMain.Width, pbMain.Height);
+            using (Graphics g = Graphics.FromImage(result))
+            {
+                g.DrawImage(bmp2, Point.Empty);
+                g.DrawImage(bmp1, Point.Empty);
+            }
+            return result;
         }
         #endregion
 
@@ -513,8 +568,12 @@ namespace Paint
             pen.Width = width;
         }
 
+
         #endregion
 
-       
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            _currentTool = "select";
+        }
     }
 }

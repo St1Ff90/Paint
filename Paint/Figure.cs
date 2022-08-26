@@ -77,5 +77,6 @@ namespace Paint
             Figure Obj = (Figure)this.MemberwiseClone();
             return Obj;
         }
+
     }
 }

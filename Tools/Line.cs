@@ -11,7 +11,8 @@ namespace Tools
 {
     public class Line : IPaintable
     {
-        public List<Point> _points;
+        public Point _start;
+        public Point _end;
         public Bitmap Icon => Resources.Line;
 
         public string ToolTitle => nameof(Line);
@@ -20,8 +21,7 @@ namespace Tools
 
         public void Start(int x, int y)
         {
-            _points = new List<Point>();
-            _points.Add(new Point(x, y));
+            _start = new Point(x, y);
         }
 
         public void ClearObj()
@@ -31,21 +31,32 @@ namespace Tools
 
         public void Draw(Graphics graphics, Pen pen, int x, int y)
         {
-            if(_points.Count == 2)
-            {
-                _points[1] = new Point(x, y);
-            }
-            else
-            {
-                _points.Add(new Point(x, y));
-
-            }
-            graphics.DrawLine(pen, _points[0], _points[_points.Count - 1]);
+            _end = new Point(x, y);
+            graphics.DrawLine(pen, _start, _end);
         }
 
         public void Fill(Graphics graphics, Brush brush, Point start, Point end)
         {
             throw new NotImplementedException();
+        }
+
+        public double Distance(Point point, Point start, Point end)
+        {
+            if (start.X + start.Y > end.X + end.Y)
+            {
+                Point temp = start;
+                start = end;
+                end = temp;
+            }
+
+            if (point.X > end.X + 10 || point.Y > end.Y + 10 || point.X < start.X - 10 || point.Y < start.Y - 10)
+            {
+                return double.MaxValue;
+            }
+            double dx = point.X, dy = point.Y, x1 = start.X, y1 = start.Y, x2 = end.X, y2 = end.Y;
+            double double_area = Math.Abs((y2 - y1) * dx - (x2 - x1) * dy + x2 * y1 - y2 * x1);
+            double line_segment_length = Math.Sqrt(x2 * x2 - 2 * x2 * x1 + x1 * x1 + y2 * y2 - 2 * y2 * y1 + y1 * y1);
+            return double_area / line_segment_length;
         }
     }
 }
