@@ -62,7 +62,7 @@
             this.tsbUnDo = new System.Windows.Forms.ToolStripButton();
             this.tsbReDo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.select = new System.Windows.Forms.ToolStripButton();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
@@ -287,7 +287,7 @@
             this.tsbUnDo,
             this.tsbReDo,
             this.toolStripSeparator1,
-            this.toolStripButton1});
+            this.select});
             this.tsMain.Location = new System.Drawing.Point(0, 0);
             this.tsMain.Name = "tsMain";
             this.tsMain.Size = new System.Drawing.Size(800, 25);
@@ -398,15 +398,15 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButton1
+            // select
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.select.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.select.Image = ((System.Drawing.Image)(resources.GetObject("select.Image")));
+            this.select.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.select.Name = "select";
+            this.select.Size = new System.Drawing.Size(23, 22);
+            this.select.Text = "toolStripButton1";
+            this.select.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // openFileDialog
             // 
@@ -474,6 +474,6 @@
         private Label lblWidth;
         private Panel panel3;
         private Label lblUsedMods;
-        private ToolStripButton toolStripButton1;
+        private ToolStripButton select;
     }
 }

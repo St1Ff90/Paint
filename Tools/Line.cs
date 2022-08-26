@@ -42,14 +42,14 @@ namespace Tools
 
         public double Distance(Point point, Point start, Point end)
         {
-            if (start.X + start.Y > end.X + end.Y)
-            {
-                Point temp = start;
-                start = end;
-                end = temp;
-            }
+            int maxX = Math.Max(start.X, end.X);  
+            int minX = Math.Min(start.X, end.X);
+            int maxY = Math.Max(start.Y, end.Y);
+            int minY = Math.Min(start.Y, end.Y);
 
-            if (point.X > end.X + 10 || point.Y > end.Y + 10 || point.X < start.X - 10 || point.Y < start.Y - 10)
+            int border = 10;
+
+            if (point.X > maxX + border || point.X < minX - border || point.Y > maxY + border || point.Y < minY - border)
             {
                 return double.MaxValue;
             }
