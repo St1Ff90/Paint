@@ -44,9 +44,24 @@ namespace Tools
             graphics.DrawEllipse(pen, _start.X, _start.Y, side, side);
         }
 
-        public void Fill(Graphics graphics, Brush brush, Point start, Point end)
+        public void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth)
         {
-            throw new NotImplementedException();
+            int startX = _start.X + borderWidth / 2;
+            int startY = _start.Y + borderWidth / 2;
+            int widthFill = _end.X - _start.X;
+            int heightFill = _end.Y - _start.Y;
+            int side = widthFill - borderWidth;
+
+            if (widthFill < heightFill)
+            {
+                side = heightFill - borderWidth;
+            }
+            else
+            {
+                side = widthFill - borderWidth;
+            }
+
+            graphics.FillEllipse(brush, startX, startY, side, side);
         }
     }
 }

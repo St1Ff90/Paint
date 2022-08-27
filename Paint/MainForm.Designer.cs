@@ -28,9 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pbMain = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panelFillColours = new System.Windows.Forms.Panel();
+            this.buttonThistleFill = new System.Windows.Forms.Button();
+            this.buttonMoccasinFill = new System.Windows.Forms.Button();
+            this.buttonGrayFill = new System.Windows.Forms.Button();
+            this.buttonBlackFill = new System.Windows.Forms.Button();
+            this.buttonGreenFill = new System.Windows.Forms.Button();
+            this.buttonBlueFill = new System.Windows.Forms.Button();
+            this.buttonRedFill = new System.Windows.Forms.Button();
+            this.buttonYellowFill = new System.Windows.Forms.Button();
+            this.buttonFillOff = new System.Windows.Forms.Button();
+            this.buttonFillOn = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.lblUsedMods = new System.Windows.Forms.Label();
             this.tbWidth = new System.Windows.Forms.TrackBar();
@@ -66,6 +76,7 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
             this.panel1.SuspendLayout();
+            this.panelFillColours.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbWidth)).BeginInit();
             this.panel2.SuspendLayout();
@@ -87,6 +98,9 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.panelFillColours);
+            this.panel1.Controls.Add(this.buttonFillOff);
+            this.panel1.Controls.Add(this.buttonFillOn);
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.tbWidth);
             this.panel1.Controls.Add(this.lblWidth);
@@ -96,6 +110,121 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(173, 425);
             this.panel1.TabIndex = 1;
+            // 
+            // panelFillColours
+            // 
+            this.panelFillColours.Controls.Add(this.buttonThistleFill);
+            this.panelFillColours.Controls.Add(this.buttonMoccasinFill);
+            this.panelFillColours.Controls.Add(this.buttonGrayFill);
+            this.panelFillColours.Controls.Add(this.buttonBlackFill);
+            this.panelFillColours.Controls.Add(this.buttonGreenFill);
+            this.panelFillColours.Controls.Add(this.buttonBlueFill);
+            this.panelFillColours.Controls.Add(this.buttonRedFill);
+            this.panelFillColours.Controls.Add(this.buttonYellowFill);
+            this.panelFillColours.Location = new System.Drawing.Point(0, 226);
+            this.panelFillColours.Name = "panelFillColours";
+            this.panelFillColours.Size = new System.Drawing.Size(173, 83);
+            this.panelFillColours.TabIndex = 6;
+            // 
+            // buttonThistleFill
+            // 
+            this.buttonThistleFill.BackColor = System.Drawing.Color.Thistle;
+            this.buttonThistleFill.Location = new System.Drawing.Point(129, 42);
+            this.buttonThistleFill.Name = "buttonThistleFill";
+            this.buttonThistleFill.Size = new System.Drawing.Size(35, 33);
+            this.buttonThistleFill.TabIndex = 12;
+            this.buttonThistleFill.UseVisualStyleBackColor = false;
+            this.buttonThistleFill.Click += new System.EventHandler(this.buttonThistleFill_Click);
+            // 
+            // buttonMoccasinFill
+            // 
+            this.buttonMoccasinFill.BackColor = System.Drawing.Color.Moccasin;
+            this.buttonMoccasinFill.Location = new System.Drawing.Point(88, 42);
+            this.buttonMoccasinFill.Name = "buttonMoccasinFill";
+            this.buttonMoccasinFill.Size = new System.Drawing.Size(35, 33);
+            this.buttonMoccasinFill.TabIndex = 10;
+            this.buttonMoccasinFill.UseVisualStyleBackColor = false;
+            this.buttonMoccasinFill.Click += new System.EventHandler(this.buttonMoccasinFill_Click);
+            // 
+            // buttonGrayFill
+            // 
+            this.buttonGrayFill.BackColor = System.Drawing.Color.Gray;
+            this.buttonGrayFill.Location = new System.Drawing.Point(47, 42);
+            this.buttonGrayFill.Name = "buttonGrayFill";
+            this.buttonGrayFill.Size = new System.Drawing.Size(35, 33);
+            this.buttonGrayFill.TabIndex = 6;
+            this.buttonGrayFill.UseVisualStyleBackColor = false;
+            this.buttonGrayFill.Click += new System.EventHandler(this.buttonGrayFill_Click);
+            // 
+            // buttonBlackFill
+            // 
+            this.buttonBlackFill.BackColor = System.Drawing.Color.Black;
+            this.buttonBlackFill.Location = new System.Drawing.Point(6, 42);
+            this.buttonBlackFill.Name = "buttonBlackFill";
+            this.buttonBlackFill.Size = new System.Drawing.Size(35, 33);
+            this.buttonBlackFill.TabIndex = 5;
+            this.buttonBlackFill.UseVisualStyleBackColor = false;
+            this.buttonBlackFill.Click += new System.EventHandler(this.buttonBlackFill_Click);
+            // 
+            // buttonGreenFill
+            // 
+            this.buttonGreenFill.BackColor = System.Drawing.Color.Green;
+            this.buttonGreenFill.Location = new System.Drawing.Point(129, 3);
+            this.buttonGreenFill.Name = "buttonGreenFill";
+            this.buttonGreenFill.Size = new System.Drawing.Size(35, 33);
+            this.buttonGreenFill.TabIndex = 3;
+            this.buttonGreenFill.UseVisualStyleBackColor = false;
+            this.buttonGreenFill.Click += new System.EventHandler(this.buttonGreenFill_Click);
+            // 
+            // buttonBlueFill
+            // 
+            this.buttonBlueFill.BackColor = System.Drawing.Color.Blue;
+            this.buttonBlueFill.Location = new System.Drawing.Point(88, 3);
+            this.buttonBlueFill.Name = "buttonBlueFill";
+            this.buttonBlueFill.Size = new System.Drawing.Size(35, 33);
+            this.buttonBlueFill.TabIndex = 2;
+            this.buttonBlueFill.UseVisualStyleBackColor = false;
+            this.buttonBlueFill.Click += new System.EventHandler(this.buttonBlueFill_Click);
+            // 
+            // buttonRedFill
+            // 
+            this.buttonRedFill.BackColor = System.Drawing.Color.Red;
+            this.buttonRedFill.Location = new System.Drawing.Point(47, 3);
+            this.buttonRedFill.Name = "buttonRedFill";
+            this.buttonRedFill.Size = new System.Drawing.Size(35, 33);
+            this.buttonRedFill.TabIndex = 1;
+            this.buttonRedFill.UseVisualStyleBackColor = false;
+            this.buttonRedFill.Click += new System.EventHandler(this.buttonRedFill_Click);
+            // 
+            // buttonYellowFill
+            // 
+            this.buttonYellowFill.BackColor = System.Drawing.Color.Yellow;
+            this.buttonYellowFill.Location = new System.Drawing.Point(6, 3);
+            this.buttonYellowFill.Name = "buttonYellowFill";
+            this.buttonYellowFill.Size = new System.Drawing.Size(35, 33);
+            this.buttonYellowFill.TabIndex = 0;
+            this.buttonYellowFill.UseVisualStyleBackColor = false;
+            this.buttonYellowFill.Click += new System.EventHandler(this.buttonYellowFill_Click);
+            // 
+            // buttonFillOff
+            // 
+            this.buttonFillOff.Location = new System.Drawing.Point(88, 184);
+            this.buttonFillOff.Name = "buttonFillOff";
+            this.buttonFillOff.Size = new System.Drawing.Size(76, 41);
+            this.buttonFillOff.TabIndex = 5;
+            this.buttonFillOff.Text = "Без заливки";
+            this.buttonFillOff.UseVisualStyleBackColor = true;
+            this.buttonFillOff.Click += new System.EventHandler(this.buttonFillOff_Click);
+            // 
+            // buttonFillOn
+            // 
+            this.buttonFillOn.Location = new System.Drawing.Point(6, 184);
+            this.buttonFillOn.Name = "buttonFillOn";
+            this.buttonFillOn.Size = new System.Drawing.Size(76, 41);
+            this.buttonFillOn.TabIndex = 4;
+            this.buttonFillOn.Text = "Використати заливку";
+            this.buttonFillOn.UseVisualStyleBackColor = true;
+            this.buttonFillOn.Click += new System.EventHandler(this.buttonFillOn_Click);
             // 
             // panel3
             // 
@@ -119,11 +248,13 @@
             // 
             this.tbWidth.Dock = System.Windows.Forms.DockStyle.Top;
             this.tbWidth.Location = new System.Drawing.Point(0, 143);
-            this.tbWidth.Minimum = 1;
+            this.tbWidth.Minimum = 2;
             this.tbWidth.Name = "tbWidth";
             this.tbWidth.Size = new System.Drawing.Size(173, 45);
+            this.tbWidth.SmallChange = 2;
             this.tbWidth.TabIndex = 0;
-            this.tbWidth.Value = 1;
+            this.tbWidth.TickFrequency = 2;
+            this.tbWidth.Value = 4;
             this.tbWidth.Scroll += new System.EventHandler(this.tbWidth_Scroll);
             // 
             // lblWidth
@@ -303,7 +434,6 @@
             this.зберегтиToolStripMenuItem,
             this.зберегтиЯкToolStripMenuItem,
             this.вихідToolStripMenuItem});
-            this.tssb.Image = ((System.Drawing.Image)(resources.GetObject("tssb.Image")));
             this.tssb.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tssb.Name = "tssb";
             this.tssb.Size = new System.Drawing.Size(57, 22);
@@ -313,42 +443,42 @@
             // створитиToolStripMenuItem
             // 
             this.створитиToolStripMenuItem.Name = "створитиToolStripMenuItem";
-            this.створитиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.створитиToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.створитиToolStripMenuItem.Text = "Створити";
             this.створитиToolStripMenuItem.Click += new System.EventHandler(this.CreateToolStripMenuItem_Click);
             // 
             // додатиМодульToolStripMenuItem
             // 
             this.додатиМодульToolStripMenuItem.Name = "додатиМодульToolStripMenuItem";
-            this.додатиМодульToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.додатиМодульToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.додатиМодульToolStripMenuItem.Text = "Додати модуль";
             this.додатиМодульToolStripMenuItem.Click += new System.EventHandler(this.addModuleToolStripMenuItem_Click);
             // 
             // відкритиToolStripMenuItem
             // 
             this.відкритиToolStripMenuItem.Name = "відкритиToolStripMenuItem";
-            this.відкритиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.відкритиToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.відкритиToolStripMenuItem.Text = "Відкрити";
             this.відкритиToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // зберегтиToolStripMenuItem
             // 
             this.зберегтиToolStripMenuItem.Name = "зберегтиToolStripMenuItem";
-            this.зберегтиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.зберегтиToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.зберегтиToolStripMenuItem.Text = "Зберегти";
             this.зберегтиToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
             // 
             // зберегтиЯкToolStripMenuItem
             // 
             this.зберегтиЯкToolStripMenuItem.Name = "зберегтиЯкToolStripMenuItem";
-            this.зберегтиЯкToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.зберегтиЯкToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.зберегтиЯкToolStripMenuItem.Text = "Зберегти як..";
             this.зберегтиЯкToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // вихідToolStripMenuItem
             // 
             this.вихідToolStripMenuItem.Name = "вихідToolStripMenuItem";
-            this.вихідToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.вихідToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.вихідToolStripMenuItem.Text = "Вихід";
             // 
             // toolStripSeparator3
@@ -359,7 +489,6 @@
             // tsbSave
             // 
             this.tsbSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSave.Image = ((System.Drawing.Image)(resources.GetObject("tsbSave.Image")));
             this.tsbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSave.Name = "tsbSave";
             this.tsbSave.Size = new System.Drawing.Size(23, 22);
@@ -374,7 +503,6 @@
             // tsbUnDo
             // 
             this.tsbUnDo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbUnDo.Image = ((System.Drawing.Image)(resources.GetObject("tsbUnDo.Image")));
             this.tsbUnDo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbUnDo.Name = "tsbUnDo";
             this.tsbUnDo.Size = new System.Drawing.Size(23, 22);
@@ -384,7 +512,6 @@
             // tsbReDo
             // 
             this.tsbReDo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbReDo.Image = ((System.Drawing.Image)(resources.GetObject("tsbReDo.Image")));
             this.tsbReDo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbReDo.Name = "tsbReDo";
             this.tsbReDo.Size = new System.Drawing.Size(23, 22);
@@ -414,6 +541,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panelFillColours.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbWidth)).EndInit();
@@ -462,5 +590,16 @@
         private Label lblWidth;
         private Panel panel3;
         private Label lblUsedMods;
+        private Button buttonFillOn;
+        private Button buttonFillOff;
+        private Panel panelFillColours;
+        private Button buttonGrayFill;
+        private Button buttonBlackFill;
+        private Button buttonGreenFill;
+        private Button buttonBlueFill;
+        private Button buttonRedFill;
+        private Button buttonYellowFill;
+        private Button buttonThistleFill;
+        private Button buttonMoccasinFill;
     }
 }

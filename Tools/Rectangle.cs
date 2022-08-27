@@ -41,9 +41,14 @@ namespace Tools
             graphics.DrawRectangle(pen, startX, startY, width, height);
         }
 
-        public void Fill(Graphics graphics, Brush brush, Point start, Point end)
+        public void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth)
         {
-            throw new NotImplementedException();
+            int startFillX = Math.Min(_start.X, _end.X) + borderWidth / 2;
+            int startFillY = Math.Min(_start.Y, _end.Y) + borderWidth / 2;
+            int widthFill = Math.Abs(_end.X - _start.X) - borderWidth;
+            int heightFill = Math.Abs(_end.Y - _start.Y) - borderWidth;
+
+            graphics.FillRectangle(brush, startFillX, startFillY, widthFill, heightFill);
         }
     }
 }

@@ -43,9 +43,9 @@ namespace Tools
             graphics.DrawLine(pen, _points[0], _points[_points.Count - 1]);
         }
 
-        public void Fill(Graphics graphics, Brush brush, Point start, Point end)
+        public void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth)
         {
-            throw new NotImplementedException();
+            graphics.FillRectangle(brush, 0, 0, 0, 0);
         }
     }
 }

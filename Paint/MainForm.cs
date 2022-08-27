@@ -23,9 +23,13 @@ namespace Paint
         private string _currentFile;
         private int _maxPointsCount;
         private Pen pen;
+        private Brush brush;
         private Bitmap _temp;
+        private bool isFilled;
+        private int borderWidth;
 
         private Action<Graphics, Pen, int, int> Draw;
+        private Action<Graphics, Brush, int, int, int> Fill;
         private Action<int, int> Start;
         private Action DisposeItem;
         private List<Figure> _currentHistory = new List<Figure>();
@@ -174,6 +178,8 @@ namespace Paint
             var icon = GetPropertyFromType<Bitmap>(type, nameof(IPaintable.Icon), obj);
             var onClickMethodDraw = type.GetMethod(nameof(IPaintable.Draw), BindingFlags.Public | BindingFlags.Instance);
             var actionDraw = (Action<Graphics, Pen, int, int>)Delegate.CreateDelegate(typeof(Action<Graphics, Pen, int, int>), obj, onClickMethodDraw);
+            var onClickMethodFill = type.GetMethod(nameof(IPaintable.Fill), BindingFlags.Public | BindingFlags.Instance);
+            var actionFill = (Action<Graphics, Brush, int, int, int>)Delegate.CreateDelegate(typeof(Action<Graphics, Brush, int, int, int>), obj, onClickMethodFill);
             var onClickMethodStart = type.GetMethod(nameof(IPaintable.Start), BindingFlags.Public | BindingFlags.Instance);
             var actionAddPoint = (Action<int, int>)Delegate.CreateDelegate(typeof(Action<int, int>), obj, onClickMethodStart);
             var onClickMethodADispose = type.GetMethod(nameof(IPaintable.ClearObj), BindingFlags.Public | BindingFlags.Instance);
@@ -187,6 +193,7 @@ namespace Paint
                 {
                     _currentTool = toolName;
                     Draw = actionDraw;
+                    Fill = actionFill;
                     Start = actionAddPoint;
                     DisposeItem = actionDispose;
                     _maxPointsCount = maxPoints;
@@ -291,6 +298,10 @@ namespace Paint
                     }
 
                     Draw?.Invoke(graphics, pen, e.Location.X, e.Location.Y);
+                    if(isFilled)
+                    {
+                        Fill?.Invoke(graphics, brush, e.Location.X, e.Location.Y, borderWidth);
+                    }
                     pbMain.Image?.Dispose();
                     pbMain.Image = (Bitmap)bitmap.Clone();
                 }
@@ -506,15 +517,64 @@ namespace Paint
         {
             pen.Color = ((Button)sender).BackColor;
         }
+
         private void tbWidth_Scroll(object sender, EventArgs e)
         {
-            int width = ((TrackBar)sender).Value;
-            lblWidth.Text = "Товшина " + width + " px";
-            pen.Width = width;
+            borderWidth = ((TrackBar)sender).Value;
+            lblWidth.Text = "Товшина " + borderWidth + " px";
+            pen.Width = borderWidth;
+        }
+
+        private void buttonYellowFill_Click(object sender, EventArgs e)
+        {
+            brush = new SolidBrush(buttonYellowFill.BackColor);
+        }
+
+        private void buttonRedFill_Click(object sender, EventArgs e)
+        {
+            brush = new SolidBrush(buttonRedFill.BackColor);
+        }
+
+        private void buttonBlueFill_Click(object sender, EventArgs e)
+        {
+            brush = new SolidBrush(buttonBlueFill.BackColor);
+        }
+
+        private void buttonGreenFill_Click(object sender, EventArgs e)
+        {
+            brush = new SolidBrush(buttonGreenFill.BackColor);
+        }
+
+        private void buttonBlackFill_Click(object sender, EventArgs e)
+        {
+            brush = new SolidBrush(buttonBlackFill.BackColor);
+        }
+
+        private void buttonGrayFill_Click(object sender, EventArgs e)
+        {
+            brush = new SolidBrush(buttonGrayFill.BackColor);
+        }
+
+        private void buttonMoccasinFill_Click(object sender, EventArgs e)
+        {
+            brush = new SolidBrush(buttonMoccasinFill.BackColor);
+        }
+
+        private void buttonThistleFill_Click(object sender, EventArgs e)
+        {
+            brush = new SolidBrush(buttonThistleFill.BackColor);
         }
 
         #endregion
 
-       
+        private void buttonFillOn_Click(object sender, EventArgs e)
+        {
+            isFilled = true;
+        }
+
+        private void buttonFillOff_Click(object sender, EventArgs e)
+        {
+            isFilled = false;
+        }
     }
 }
