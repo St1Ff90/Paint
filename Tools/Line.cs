@@ -35,9 +35,9 @@ namespace Tools
             graphics.DrawLine(pen, _start, _end);
         }
 
-        public void Fill(Graphics graphics, Brush brush, Point start, Point end)
+        public void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth)
         {
-            throw new NotImplementedException();
+            graphics.FillRectangle(brush, 0, 0, 0, 0);
         }
 
         public double Distance(Point point, Point start, Point end)

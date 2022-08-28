@@ -9,7 +9,7 @@ using Tools.Properties;
 
 namespace Tools
 {
-    public class Pancil : IPaintable
+    public class Pencil : IPaintable
     {
         public int _index = 0;
         public Point[] _points = new Point[2];
@@ -18,7 +18,7 @@ namespace Tools
 
         public Bitmap Icon => Resources.Pencil;
 
-        public string ToolTitle => nameof(Pancil);
+        public string ToolTitle => nameof(Pencil);
 
         public int needPointsToDraw => int.MaxValue;
 
@@ -69,9 +69,9 @@ namespace Tools
             _points = new Point[2];
         }
 
-        public void Fill(Graphics graphics, Brush brush, Point start, Point end)
+        public void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth)
         {
-            throw new NotImplementedException();
+            graphics.FillRectangle(brush, 0, 0, 0, 0);
         }
 
         public double Distance(Point point, Point start, Point end)

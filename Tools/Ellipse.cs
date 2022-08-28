@@ -39,9 +39,14 @@ namespace Tools
             graphics.DrawEllipse(pen, _start.X, _start.Y, width, height);
         }
 
-        public void Fill(Graphics graphics, Brush brush, Point start, Point end)
+        public void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth)
         {
-            throw new NotImplementedException();
+            int startFillX = _start.X + borderWidth / 2;
+            int startFillY = _start.Y + borderWidth / 2;
+            int widthFill = _end.X - _start.X - borderWidth;
+            int heightFill = _end.Y - _start.Y - borderWidth;
+
+            graphics.FillEllipse(brush, startFillX, startFillY, widthFill, heightFill);
         }
 
         public double Distance(Point point, Point start, Point end)
