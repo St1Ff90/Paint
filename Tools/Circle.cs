@@ -63,5 +63,10 @@ namespace Tools
 
             graphics.FillEllipse(brush, startX, startY, side, side);
         }
+
+        public double Distance(Point point, Point start, Point end)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

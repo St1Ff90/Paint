@@ -13,6 +13,8 @@ namespace Tools
     {
         public int _index = 0;
         public Point[] _points = new Point[2];
+        ////public Point _start;
+        ////public Point _end;
 
         public Bitmap Icon => Resources.Pencil;
 
@@ -22,6 +24,9 @@ namespace Tools
 
         public void Start(int x, int y)
         {
+            ////_start = new Point(x, y);
+
+
             if (_points.Length <= _index)
             {
                 Point[] temp = _points;
@@ -48,6 +53,9 @@ namespace Tools
 
         public void Draw(Graphics graphics, Pen pen, int x, int y)
         {
+            ////_end = new Point(x, y);
+            ////graphics.DrawLine(pen, _start, _end);
+
             this.Start(x, y);
             if (this.GetPointsArr().Length >= 2)
             {
@@ -64,6 +72,26 @@ namespace Tools
         public void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth)
         {
             graphics.FillRectangle(brush, 0, 0, 0, 0);
+        }
+
+        public double Distance(Point point, Point start, Point end)
+        {
+            int maxX = Math.Max(start.X, end.X);
+            int minX = Math.Min(start.X, end.X);
+            int maxY = Math.Max(start.Y, end.Y);
+            int minY = Math.Min(start.Y, end.Y);
+
+            int border = 10;
+
+            if (point.X > maxX + border || point.X < minX - border || point.Y > maxY + border || point.Y < minY - border)
+            {
+                return double.MaxValue;
+            }
+
+            double dx = point.X, dy = point.Y, x1 = start.X, y1 = start.Y, x2 = end.X, y2 = end.Y;
+            double double_area = Math.Abs((y2 - y1) * dx - (x2 - x1) * dy + x2 * y1 - y2 * x1);
+            double line_segment_length = Math.Sqrt(x2 * x2 - 2 * x2 * x1 + x1 * x1 + y2 * y2 - 2 * y2 * y1 + y1 * y1);
+            return double_area / line_segment_length;
         }
     }
 }

@@ -11,5 +11,6 @@ namespace ModderPack
         void ClearObj();
         void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth);
         int needPointsToDraw { get; }
+        double Distance(Point pointToCheck, Point start, Point end);
     }
 }

@@ -72,6 +72,7 @@
             this.tsbUnDo = new System.Windows.Forms.ToolStripButton();
             this.tsbReDo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.select = new System.Windows.Forms.ToolStripButton();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
@@ -416,7 +417,8 @@
             this.toolStripSeparator2,
             this.tsbUnDo,
             this.tsbReDo,
-            this.toolStripSeparator1});
+            this.toolStripSeparator1,
+            this.select});
             this.tsMain.Location = new System.Drawing.Point(0, 0);
             this.tsMain.Name = "tsMain";
             this.tsMain.Size = new System.Drawing.Size(800, 25);
@@ -523,6 +525,16 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
+            // select
+            // 
+            this.select.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.select.Image = ((System.Drawing.Image)(resources.GetObject("select.Image")));
+            this.select.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.select.Name = "select";
+            this.select.Size = new System.Drawing.Size(23, 22);
+            this.select.Text = "toolStripButton1";
+            this.select.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "openFileDialog";
@@ -601,5 +613,6 @@
         private Button buttonYellowFill;
         private Button buttonThistleFill;
         private Button buttonMoccasinFill;
+        private ToolStripButton select;
     }
 }
