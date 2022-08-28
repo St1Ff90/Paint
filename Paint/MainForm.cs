@@ -280,7 +280,7 @@ namespace Paint
             {
                 if (_currentHistory.Count > 0)
                 {
-                    Figure figure = FindFogureByPoint(e.Location);
+                    Figure figure = FindFigureByPoint(e.Location);
                 }
             }
             else
@@ -295,7 +295,7 @@ namespace Paint
             }
         }
 
-        private Figure FindFogureByPoint(Point location)
+        private Figure FindFigureByPoint(Point location)
         {
             (Figure?, double?) figureWithMinDistance = new(new Figure(), double.MaxValue);
 
@@ -340,7 +340,7 @@ namespace Paint
                     }
 
                     Draw?.Invoke(graphics, pen, e.Location.X, e.Location.Y);
-                    if(isFilled)
+                    if (isFilled)
                     {
                         Fill?.Invoke(graphics, brush, e.Location.X, e.Location.Y, borderWidth);
                     }
@@ -370,7 +370,7 @@ namespace Paint
             HilightMenuItem();
         }
 
-        private void tsbUnDo_Click(object sender, EventArgs e)
+        private void tsbUnDo1_Click(object sender, EventArgs e)
         {
             if (_currentHistory.Count == 0)
             {
@@ -382,7 +382,7 @@ namespace Paint
             DrawFromHyistory();
         }
 
-        private void tsbReDo_Click(object sender, EventArgs e)
+        private void tsbReDo1_Click(object sender, EventArgs e)
         {
             if (_redoList.Count == 0)
             {
@@ -630,6 +630,41 @@ namespace Paint
         private void buttonFillOff_Click(object sender, EventArgs e)
         {
             isFilled = false;
+        }
+
+        private void select_Click(object sender, EventArgs e)
+        {
+            _currentTool = "select";
+        }
+
+        private void tsbUnDo_Click(object sender, EventArgs e)
+        {
+            if (_currentHistory.Count == 0)
+            {
+                return;
+            }
+            HilightMenuItem();
+            _redoList.Add(_currentHistory[_currentHistory.Count - 1]);
+            _currentHistory.RemoveAt(_currentHistory.Count - 1);
+            DrawFromHyistory();
+        }
+
+
+        private void tsbReDo_Click(object sender, EventArgs e)
+        {
+            if (_redoList.Count == 0)
+            {
+                return;
+            }
+            HilightMenuItem();
+            _currentHistory.Add(_redoList[_redoList.Count - 1]);
+            _redoList.RemoveAt(_redoList.Count - 1);
+            DrawFromHyistory();
+        }
+
+        private void select_Click_1(object sender, EventArgs e)
+        {
+            _currentTool = "select";
         }
     }
 }

@@ -50,5 +50,10 @@ namespace Tools
 
             graphics.FillRectangle(brush, startFillX, startFillY, widthFill, heightFill);
         }
+
+        public double Distance(Point pointToCheck, Point start, Point end)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
