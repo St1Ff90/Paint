@@ -63,6 +63,16 @@ namespace Paint.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _1084363_200 {
+            get {
+                object obj = ResourceManager.GetObject("1084363-200", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cursor_11549398080fd7y2r6evj {
             get {
                 object obj = ResourceManager.GetObject("cursor-11549398080fd7y2r6evj", resourceCulture);
@@ -76,6 +86,16 @@ namespace Paint.Properties {
         internal static System.Drawing.Bitmap images {
             get {
                 object obj = ResourceManager.GetObject("images", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Outline {
+            get {
+                object obj = ResourceManager.GetObject("Outline", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

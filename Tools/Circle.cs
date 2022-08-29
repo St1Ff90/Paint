@@ -52,7 +52,7 @@ namespace Tools
             int heightFill = _end.Y - _start.Y;
             int side = widthFill - borderWidth;
 
-            if (widthFill < heightFill)
+            if (widthFill > heightFill)
             {
                 side = heightFill - borderWidth;
             }

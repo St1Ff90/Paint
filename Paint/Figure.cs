@@ -17,17 +17,33 @@ namespace Paint
         public int LineWidth { get; set; }
 
         [XmlIgnore]
-        public Color Color { get; set; }
+        public Color BorderColor { get; set; }
+
+        public int BorderColorAsArgb
+        {
+            get
+            {
+                return BorderColor.ToArgb();
+            }
+            set
+            {
+                BorderColor = Color.FromArgb(value);
+            }
+        }
+
+
+        [XmlIgnore]
+        public Color BackColor { get; set; }
 
         public int BackColorAsArgb
         {
             get
             {
-                return Color.ToArgb();
+                return BackColor.ToArgb();
             }
             set
             {
-                Color = Color.FromArgb(value);
+                BackColor = Color.FromArgb(value);
             }
         }
 

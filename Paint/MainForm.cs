@@ -23,11 +23,11 @@ namespace Paint
         private string _currentFile;
         private int _maxPointsCount;
         private Pen pen;
-        private Brush brush;
+        private SolidBrush brush;
         private Bitmap _temp;
         private bool isFilled;
         private int borderWidth;
-
+        private bool? selectOutlineColor;
         private Action<Graphics, Pen, int, int> Draw;
         private Action<Graphics, Brush, int, int, int> Fill;
         private Action<int, int> Start;
@@ -35,18 +35,18 @@ namespace Paint
         private Func<Point, Point, Point, double> Distance;
         private List<Figure> _currentHistory = new List<Figure>();
         private List<Figure> _redoList = new List<Figure>();
-
-
-
         private Figure _figure;
         private static string pathToModsList = @"ToolsDllPath.xml";
+        private Figure _currentFigure;
 
         public MainForm()
         {
             InitializeComponent();
             pbMain.Image = new Bitmap(pbMain.Width, pbMain.Height);
             _temp = (Bitmap)pbMain.Image.Clone();
-            GetPen();
+            SetPen(null, 3);
+            SetBrush(null);
+            panelColors.Visible = false;
         }
 
         #region Save/Load
@@ -238,15 +238,45 @@ namespace Paint
 
         #region Service Methods
 
-        private void GetPen()
+        private void UpdateFigure()
         {
-            int width = 3;
-            pen = new Pen(Color.Black, width);
+            if (_currentFigure != null)
+            {
+                _currentHistory.Remove(_currentFigure);
+                _currentHistory.Add(new Figure()
+                {
+                    BorderColor = pen.Color,
+                    LineWidth = (int)pen.Width,
+                    ToolTitle = _currentFigure.ToolTitle,
+                    Points = _currentFigure.Points,
+                    BackColor = brush.Color
+                });
+                DrawFromHyistory();
+                _currentFigure = null;
+            }
+        }
+
+        private void SetPen(Color? color, int width)
+        {
+            Color? defaultCol = color == null ? Color.Black : color;
+            pen = new Pen((Color)defaultCol, width);
             pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             lblWidth.Text = "Товшина " + width + " px";
-            tbWidth.Value = width;
-            bntBlack.Select();
+            if (width > 0)
+            {
+                tbWidth.Value = width;
+
+            }
+            btnOutlineColor.BackColor = (Color)defaultCol;
+            UpdateFigure();
+        }
+
+        private void SetBrush(Color? color)
+        {
+            brush = color == null ? new SolidBrush(Color.Transparent) : new SolidBrush((Color)color);
+            btnFillColor.BackColor = color == null ? Color.Transparent : (Color)color;
+            UpdateFigure();
         }
 
         private void HilightMenuItem()
@@ -267,7 +297,11 @@ namespace Paint
         {
             if (_currentTool == null) return;
             _isClicked = false;
-            _currentHistory.Add(_figure.DeepCopy());
+            if (_figure != null)
+            {
+                _currentHistory.Add(_figure.DeepCopy());
+
+            }
             _redoList = new List<Figure>();
             _temp = (Bitmap)pbMain.Image.Clone();
             DisposeItem?.Invoke();
@@ -281,6 +315,7 @@ namespace Paint
                 if (_currentHistory.Count > 0)
                 {
                     Figure figure = FindFigureByPoint(e.Location);
+                    _currentFigure = figure;
                 }
             }
             else
@@ -288,7 +323,7 @@ namespace Paint
                 _isClicked = true;
                 _figure = new Figure();
                 _figure.ToolTitle = _currentTool;
-                _figure.Color = pen.Color;
+                _figure.BorderColor = pen.Color;
                 _figure.LineWidth = (int)pen.Width;
                 _figure.Points.Add(e.Location);
                 Start?.Invoke(e.Location.X, e.Location.Y);
@@ -317,6 +352,8 @@ namespace Paint
             }
             tsMain.Items.Find("select", false).First().PerformClick();
 
+            SetPen(figureWithMinDistance.Item1.BorderColor, figureWithMinDistance.Item1.LineWidth);
+
             MessageBox.Show(figureWithMinDistance.Item1.ToolTitle);
 
             return figureWithMinDistance.Item1;
@@ -339,9 +376,10 @@ namespace Paint
                     }
 
                     Draw?.Invoke(graphics, pen, e.Location.X, e.Location.Y);
-                    if (isFilled)
+                    if (brush.Color != Color.Transparent)
                     {
                         Fill?.Invoke(graphics, brush, e.Location.X, e.Location.Y, borderWidth);
+                        _figure.BackColor = brush.Color;
                     }
                     pbMain.Image?.Dispose();
                     pbMain.Image = (Bitmap)bitmap.Clone();
@@ -421,13 +459,18 @@ namespace Paint
                     if (toolStripButtonList.Count() != 0)
                     {
                         ToolStripItem toolStripButton = toolStripButtonList.First();
-                        pen = new Pen(figure.Color, figure.LineWidth);
+                        pen = new Pen(figure.BorderColor, figure.LineWidth);
+                        brush = new SolidBrush(figure.BackColor);
                         toolStripButton.PerformClick();
 
                         for (int i = 0; i < figure.Points.Count - 1; i++)
                         {
                             Start?.Invoke(figure.Points[i].X, figure.Points[i].Y);
                             Draw?.Invoke(graphics, pen, figure.Points[i + 1].X, figure.Points[i + 1].Y);
+                            if (figure.BackColor != new Color())
+                            {
+                                Fill?.Invoke(graphics, brush, figure.Points[i + 1].X, figure.Points[i + 1].Y, figure.LineWidth);
+                            }
                         }
                         DisposeItem?.Invoke();
                         pbMain.Image = (Bitmap)bitmap.Clone();
@@ -514,62 +557,182 @@ namespace Paint
 
         private void bntYellow_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntRed_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntBlue_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntGreen_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntBlack_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntGray_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntSilver_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntWhite_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntTan_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntMoccassin_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntLime_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void bntThistle_Click(object sender, EventArgs e)
         {
-            pen.Color = ((Button)sender).BackColor;
+            if ((bool)selectOutlineColor)
+            {
+                btnOutlineColor.BackColor = ((Button)sender).BackColor;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                btnFillColor.BackColor = ((Button)sender).BackColor;
+                SetBrush(btnFillColor.BackColor);
+            }
+            panelColors.Visible = false;
         }
 
         private void tbWidth_Scroll(object sender, EventArgs e)
@@ -579,44 +742,15 @@ namespace Paint
             pen.Width = borderWidth;
         }
 
-        private void buttonYellowFill_Click(object sender, EventArgs e)
-        {
-            brush = new SolidBrush(buttonYellowFill.BackColor);
-        }
-
-        private void buttonRedFill_Click(object sender, EventArgs e)
-        {
-            brush = new SolidBrush(buttonRedFill.BackColor);
-        }
-
-        private void buttonBlueFill_Click(object sender, EventArgs e)
-        {
-            brush = new SolidBrush(buttonBlueFill.BackColor);
-        }
-
-        private void buttonGreenFill_Click(object sender, EventArgs e)
-        {
-            brush = new SolidBrush(buttonGreenFill.BackColor);
-        }
-
-        private void buttonBlackFill_Click(object sender, EventArgs e)
-        {
-            brush = new SolidBrush(buttonBlackFill.BackColor);
-        }
-
-        private void buttonGrayFill_Click(object sender, EventArgs e)
-        {
-            brush = new SolidBrush(buttonGrayFill.BackColor);
-        }
 
         private void buttonMoccasinFill_Click(object sender, EventArgs e)
         {
-            brush = new SolidBrush(buttonMoccasinFill.BackColor);
+            brush = new SolidBrush(btnOutlineColor.BackColor);
         }
 
         private void buttonThistleFill_Click(object sender, EventArgs e)
         {
-            brush = new SolidBrush(buttonThistleFill.BackColor);
+            brush = new SolidBrush(btnFillColor.BackColor);
         }
 
         #endregion
@@ -664,6 +798,48 @@ namespace Paint
         private void select_Click_1(object sender, EventArgs e)
         {
             _currentTool = "select";
+        }
+
+        private void btnOutline_Click(object sender, EventArgs e)
+        {
+            panelColors.Visible = true;
+            selectOutlineColor = true;
+        }
+
+        private void btnFill_Click(object sender, EventArgs e)
+        {
+            panelColors.Visible = true;
+            selectOutlineColor = false;
+        }
+
+        private void btnTrans_Click(object sender, EventArgs e)
+        {
+            if (!(bool)selectOutlineColor)
+            {
+                btnFillColor.BackColor = Color.Transparent;
+                brush.Color = Color.Transparent;
+                panelColors.Visible = false;
+                selectOutlineColor = null;
+            }
+        }
+
+        private void btnMoreColors_Click(object sender, EventArgs e)
+        {
+            if ((bool)selectOutlineColor)
+            {
+                colorDialog1.ShowDialog();
+                btnOutlineColor.BackColor = colorDialog1.Color;
+                SetPen(btnOutlineColor.BackColor, tbWidth.Value);
+            }
+            else
+            {
+                colorDialog1.ShowDialog();
+                btnFillColor.BackColor = colorDialog1.Color;
+                SetBrush(btnFillColor.BackColor);
+            }
+            colorDialog1.Reset();
+            panelColors.Visible = false;
+            selectOutlineColor = null;
         }
     }
 }

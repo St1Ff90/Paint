@@ -11,8 +11,8 @@ namespace Tools
 {
     internal class Rectangle : IPaintable
     {
-        public Point _end;
-        public Point _start;
+        private Point _end;
+        private Point _start;
         public Bitmap Icon => Resources.Rectangle;
 
         public string ToolTitle => nameof(Rectangle);

@@ -53,9 +53,7 @@ namespace Tools
 
         public void Draw(Graphics graphics, Pen pen, int x, int y)
         {
-            ////_end = new Point(x, y);
-            ////graphics.DrawLine(pen, _start, _end);
-
+           
             this.Start(x, y);
             if (this.GetPointsArr().Length >= 2)
             {
