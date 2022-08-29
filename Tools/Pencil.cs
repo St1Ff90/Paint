@@ -76,12 +76,11 @@ namespace Tools
 
         public double Distance(Point point, Point start, Point end)
         {
+            const int border = 10;
             int maxX = Math.Max(start.X, end.X);
             int minX = Math.Min(start.X, end.X);
             int maxY = Math.Max(start.Y, end.Y);
             int minY = Math.Min(start.Y, end.Y);
-
-            int border = 10;
 
             if (point.X > maxX + border || point.X < minX - border || point.Y > maxY + border || point.Y < minY - border)
             {

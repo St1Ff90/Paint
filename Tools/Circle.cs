@@ -32,7 +32,7 @@ namespace Tools
             int height = _end.Y - _start.Y;
             int side = width;
 
-            if (width < height)
+            if (width > height)
             {
                 side = height;
             }
@@ -66,7 +66,15 @@ namespace Tools
 
         public double Distance(Point point, Point start, Point end)
         {
-            throw new NotImplementedException();
+            double width = Math.Abs(end.X - start.X);
+            double height = Math.Abs(end.Y - start.Y);
+            var diametr = width > height ? height : width;
+            double centerX = start.X + diametr / 2;
+            double centerY = start.Y + diametr / 2;
+
+            return (double)Math.Abs(Math.Sqrt((point.X - centerX) * (point.X - centerX) + (point.Y - centerY) * (point.Y - centerY)) - diametr / 2);
+
+
         }
     }
 }

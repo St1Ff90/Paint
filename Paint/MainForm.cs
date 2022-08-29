@@ -308,13 +308,12 @@ namespace Paint
                 for (int i = 0; i < figure.Points.Count - 1; i++)
                 {
                     double? result = Distance?.Invoke(location, figure.Points[i], figure.Points[i + 1]);
-                    if (figureWithMinDistance.Item2 > result && result < figure.LineWidth * 5)
+                    if (figureWithMinDistance.Item2 > result && result < figure.LineWidth / 2 + 5)
                     {
                         figureWithMinDistance.Item1 = figure;
                         figureWithMinDistance.Item2 = result;
                     }
                 }
-
             }
             tsMain.Items.Find("select", false).First().PerformClick();
 

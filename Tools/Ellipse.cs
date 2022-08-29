@@ -36,7 +36,14 @@ namespace Tools
             int width = _end.X - _start.X;
             int height = _end.Y - _start.Y;
 
+            int centerX = (int)(_start.X + _end.X) / 2;
+            int centerY = (int)(_start.Y + _end.Y) / 2;
+
             graphics.DrawEllipse(pen, _start.X, _start.Y, width, height);
+            graphics.DrawRectangle(pen, _start.X, _start.Y, width, height);
+            graphics.DrawRectangle(pen, centerX, centerY, 1, 1);
+            graphics.DrawLine(pen, new Point(_start.X, centerY), new Point(_end.X, centerY));
+            graphics.DrawLine(pen, new Point(centerX, _start.Y), new Point(centerX, _end.Y));
         }
 
         public void Fill(Graphics graphics, Brush brush, int x, int y, int borderWidth)
@@ -51,7 +58,14 @@ namespace Tools
 
         public double Distance(Point point, Point start, Point end)
         {
-            throw new NotImplementedException();
+            double centerX = (start.X + end.X) / 2;
+            double centerY = (start.Y + end.Y) / 2;
+            double width = Math.Abs(end.X - start.X) / 2;
+            double height = Math.Abs(end.Y - start.Y) / 2;
+
+            double position = (Math.Pow((point.X - centerX), 2) / Math.Pow(width, 2)) + (Math.Pow((point.Y - centerY), 2) / Math.Pow(height, 2));
+            // in point in figure => position will be < 1
+            return Math.Abs(position - 1) * 75;
         }
     }
 }

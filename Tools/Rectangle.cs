@@ -51,9 +51,32 @@ namespace Tools
             graphics.FillRectangle(brush, startFillX, startFillY, widthFill, heightFill);
         }
 
-        public double Distance(Point pointToCheck, Point start, Point end)
+        public double Distance(Point point, Point start, Point end)
         {
-            throw new NotImplementedException();
+            const int border = 10;
+            int maxX = Math.Max(start.X, end.X);
+            int minX = Math.Min(start.X, end.X);
+            int maxY = Math.Max(start.Y, end.Y);
+            int minY = Math.Min(start.Y, end.Y);
+
+            if (point.X > maxX + border || point.X < minX - border || point.Y > maxY + border || point.Y < minY - border)
+            {
+                return double.MaxValue;
+            }
+
+            var d_top = Math.Abs(start.Y - point.Y);
+            var d_bottom = Math.Abs(end.Y - point.Y);
+            var corner_y = d_top < d_bottom ? start.Y : end.Y;
+
+            var d_left = Math.Abs(start.X - point.X);
+            var d_right = Math.Abs(end.X - point.X);
+            var corner_x = d_left < d_right ? start.X : end.X;
+
+            var d_cx = corner_x - point.X;
+            var d_cy = corner_y - point.Y;
+            var d_corner = Math.Sqrt(d_cx * d_cx + d_cy * d_cy);
+
+            return Math.Min(Math.Min(Math.Min(Math.Min(d_top, d_bottom), d_left), d_right), d_corner);
         }
     }
 }
